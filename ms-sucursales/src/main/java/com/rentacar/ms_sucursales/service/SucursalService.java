@@ -29,9 +29,7 @@ public class SucursalService {
     }
 
     public List<SucursalResponseDTO> obtenerTodas() {
-        return sucursalRepository.findAll().stream()
-                .map(this::mapearAResponse)
-                .collect(Collectors.toList());
+        return sucursalRepository.findAll().stream().map(this::mapearAResponse).collect(Collectors.toList());
     }
 
     private SucursalResponseDTO mapearAResponse(Sucursal sucursal) {

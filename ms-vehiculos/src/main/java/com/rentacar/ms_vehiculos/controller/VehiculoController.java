@@ -18,7 +18,7 @@ import com.rentacar.ms_vehiculos.service.VehiculoService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/version/vehiculos")
+@RequestMapping("/api/v1/vehiculos")
 public class VehiculoController {
 
     @Autowired

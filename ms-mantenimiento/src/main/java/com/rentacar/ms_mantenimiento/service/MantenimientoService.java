@@ -23,7 +23,7 @@ public class MantenimientoService {
 
     public MantenimientoResponseDTO registrarMantenimiento(MantenimientoRequestDTO dto) {
         
-        // Verificamos que el vehículo exista mediante Feign
+        // Utilizamos el feig para verificar que exista
         try {
             vehiculoClient.obtenerVehiculoPorId(dto.getVehiculoId());
         } catch (Exception e) {
@@ -42,9 +42,7 @@ public class MantenimientoService {
     }
 
     public List<MantenimientoResponseDTO> obtenerTodos() {
-        return mantenimientoRepository.findAll().stream()
-                .map(this::mapearAResponse)
-                .collect(Collectors.toList());
+        return mantenimientoRepository.findAll().stream().map(this::mapearAResponse).collect(Collectors.toList());
     }
 
     private MantenimientoResponseDTO mapearAResponse(Mantenimiento mant) {

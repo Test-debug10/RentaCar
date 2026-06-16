@@ -20,9 +20,9 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/extras")
+@RequestMapping("/api/v1/extras")
 public class ExtraController {
-
+    
     @Autowired
     private ExtraService extraService;
 

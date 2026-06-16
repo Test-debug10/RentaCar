@@ -25,10 +25,10 @@ public class Pago {
     private Double monto;
 
     @Column(nullable = false, length = 50)
-    private String metodoPago; // ej. TARJETA_CREDITO, DEBITO, TRANSFERENCIA
+    private String metodoPago; // TARJETA_CREDITO, DEBITO, TRANSFERENCIA
 
     @Column(nullable = false, length = 20)
-    private String estado; // ej. PENDIENTE, COMPLETADO, RECHAZADO
+    private String estado; // PENDIENTE, COMPLETADO, RECHAZADO
 
     @Column(nullable = false)
     private LocalDateTime fechaPago;

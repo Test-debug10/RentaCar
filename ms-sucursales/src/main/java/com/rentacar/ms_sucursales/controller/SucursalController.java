@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/sucursales")
+@RequestMapping("/api/v1/sucursales")
 public class SucursalController {
 
     @Autowired

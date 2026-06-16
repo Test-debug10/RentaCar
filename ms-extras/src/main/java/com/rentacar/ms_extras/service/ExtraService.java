@@ -29,9 +29,7 @@ public class ExtraService {
     }
 
     public List<ExtraResponseDTO> obtenerTodos() {
-        return extraRepository.findAll().stream()
-                .map(this::mapearAResponse)
-                .collect(Collectors.toList());
+        return extraRepository.findAll().stream().map(this::mapearAResponse).collect(Collectors.toList());
     }
 
     private ExtraResponseDTO mapearAResponse(Extra extra) {

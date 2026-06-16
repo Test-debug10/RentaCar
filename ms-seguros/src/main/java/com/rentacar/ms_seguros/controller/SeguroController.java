@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/seguros")
+@RequestMapping("/api/v1/seguros")
 public class SeguroController {
 
     @Autowired

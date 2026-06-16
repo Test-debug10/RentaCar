@@ -26,19 +26,20 @@ public class ReservaService {
     @Autowired
     private VehiculoClient vehiculoClient;
 
+    // utilizamos el feig
     public ReservaResponseDTO crearReserva(ReservaRequestDTO dto) {
         if (dto.getFechaFin().isBefore(dto.getFechaInicio())) {
             throw new IllegalArgumentException("La fecha de fin no puede ser anterior a la fecha de inicio");
         }
 
-        // 1. Validar que el usuario existe vía Feign
+        // Validamos que el usuario exista
         try {
             usuarioClient.obtenerUsuarioPorId(dto.getUsuarioId());
         } catch (Exception e) {
             throw new IllegalArgumentException("El usuario ingresado no existe");
         }
 
-        // 2. Validar que el vehículo existe y obtener su precio vía Feign
+        // Validamos que el auto existe
         VehiculoDTO vehiculo;
         try {
             vehiculo = vehiculoClient.obtenerVehiculoPorId(dto.getVehiculoId());
@@ -46,12 +47,13 @@ public class ReservaService {
             throw new IllegalArgumentException("El vehículo ingresado no existe o no está disponible");
         }
 
-        // 3. Calcular monto total
+        // calculamos el monto
         long dias = ChronoUnit.DAYS.between(dto.getFechaInicio(), dto.getFechaFin());
-        if (dias == 0) dias = 1; // Mínimo 1 día de cobro
+        if (dias == 0) 
+            dias = 1; // nota:1 día de cobro
         Double montoTotal = dias * vehiculo.getPrecioPorDia();
 
-        // 4. Guardar
+        // guardamos
         Reserva reserva = new Reserva();
         reserva.setUsuarioId(dto.getUsuarioId());
         reserva.setVehiculoId(dto.getVehiculoId());

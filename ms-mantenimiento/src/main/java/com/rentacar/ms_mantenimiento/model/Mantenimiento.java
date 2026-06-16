@@ -22,7 +22,7 @@ public class Mantenimiento {
     private Long vehiculoId;
 
     @Column(nullable = false, length = 50)
-    private String tipo; // ej. PREVENTIVO, CORRECTIVO, LIMPIEZA
+    private String tipo; // PREVENTIVO, CORRECTIVO, LIMPIEZA
 
     @Column(nullable = false, length = 255)
     private String descripcion;

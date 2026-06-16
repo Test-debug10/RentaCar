@@ -29,10 +29,7 @@ public class UsuarioService {
     }
 
     public List<UsuarioResponseDTO> obtenerTodos() {
-        return usuarioRepository.findAll()
-                .stream()
-                .map(this::mapearAResponse)
-                .collect(Collectors.toList());
+        return usuarioRepository.findAll().stream().map(this::mapearAResponse).collect(Collectors.toList());
     }
 
     private UsuarioResponseDTO mapearAResponse(Usuario usuario) {

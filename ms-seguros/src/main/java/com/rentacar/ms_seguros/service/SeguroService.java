@@ -21,7 +21,7 @@ public class SeguroService {
     private ReservaClient reservaClient;
 
     public SeguroResponseDTO registrarSeguro(SeguroRequestDTO dto) {
-        // Validación de existencia de la reserva en el microservicio correspondiente
+        // validamos la existencia de la reserva
         try {
             reservaClient.obtenerReservaPorId(dto.getReservaId());
         } catch (Exception e) {
@@ -39,9 +39,7 @@ public class SeguroService {
     }
 
     public List<SeguroResponseDTO> obtenerTodos() {
-        return seguroRepository.findAll().stream()
-                .map(this::mapearAResponse)
-                .collect(Collectors.toList());
+        return seguroRepository.findAll().stream().map(this::mapearAResponse).collect(Collectors.toList());
     }
 
     private SeguroResponseDTO mapearAResponse(Seguro seguro) {

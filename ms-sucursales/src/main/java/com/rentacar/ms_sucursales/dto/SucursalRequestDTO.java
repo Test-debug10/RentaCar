@@ -13,7 +13,7 @@ public class SucursalRequestDTO {
     private String direccion;
 
     @NotBlank(message = "La ciudad es obligatoria")
-    private String city; // Mapeado como ciudad en la lógica
+    private String city;
 
     @NotBlank(message = "El teléfono de contacto es obligatorio")
     private String telefono;

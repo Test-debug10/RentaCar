@@ -7,5 +7,4 @@ import com.rentacar.ms_vehiculos.model.Vehiculo;
 
 @Repository
 public interface VehiculoRepository extends JpaRepository<Vehiculo, Long> {
-    // Spring Data JPA implementará los métodos CRUD automáticamente
 }

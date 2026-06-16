@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(name = "ms-vehiculos")
 public interface VehiculoClient {
 
-    @GetMapping("/api/vehiculos/{id}")
+    @GetMapping("/api/v1/vehiculos/{id}")
     Object obtenerVehiculoPorId(@PathVariable("id") Long id);
 }
