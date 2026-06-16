@@ -1,15 +1,16 @@
 package com.rentacar.ms_seguros.service;
 
-import com.rentacar.ms_seguros.client.ReservaClient;
-import com.rentacar.ms-seguros.dto.SeguroRequestDTO;
-import com.rentacar.ms_seguros.dto.SeguroResponseDTO;
-import com.rentacar.ms_seguros.model.Seguro;
-import com.rentacar.ms_seguros.repository.SeguroRepository;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import com.rentacar.ms_seguros.client.ReservaClient;
+import com.rentacar.ms_seguros.dto.SeguroRequestDTO;
+import com.rentacar.ms_seguros.dto.SeguroResponseDTO;
+import com.rentacar.ms_seguros.model.Seguro;
+import com.rentacar.ms_seguros.repository.SeguroRepository;
 
 @Service
 public class SeguroService {
