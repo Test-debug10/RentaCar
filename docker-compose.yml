@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+  # La base de datos
   mysql-db:
     image: mysql:8.0
     container_name: rentacar_mysql
@@ -8,3 +9,150 @@ services:
       MYSQL_ROOT_PASSWORD:
     ports:
       - "3306:3306"
+    networks:
+      - rentacar-network
+
+  # El eureka
+  eureka-server:
+    build: ./eureka-server
+    container_name: rentacar_eureka
+    ports:
+      - "8761:8761"
+    networks:
+      - rentacar-network
+
+  # El gateway
+  api-gateway:
+    build: ./api-gateway
+    container_name: rentacar_gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - eureka-server
+    networks:
+      - rentacar-network
+
+  # MS USUARIOS
+  ms-usuarios:
+    build: ./ms-usuarios
+    container_name: rentacar_ms_usuarios
+    ports:
+      - "8082:8082"
+    depends_on:
+      - mysql-db
+      - eureka-server
+    networks:
+      - rentacar-network
+
+  # MS USUARIOS
+  ms-vehiculos:
+    build: ./ms-vehiculos
+    container_name: rentacar_ms_vehiculos
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mysql-db
+      - eureka-server
+    networks:
+      - rentacar-network
+
+  # MS RESERVAS
+  ms-reservas:
+    build: ./ms-reservas
+    container_name: rentacar_ms_reservas
+    ports:
+      - "8083:8083"
+    depends_on:
+      - mysql-db
+      - eureka-server
+    networks:
+      - rentacar-network
+
+  # MS PAGOS
+  ms-pagos:
+    build: ./ms-pagos
+    container_name: rentacar_ms_pagos
+    ports:
+      - "8084:8084"
+    depends_on:
+      - mysql-db
+      - eureka-server
+    networks:
+      - rentacar-network
+
+  # MS SUCURSARLES
+  ms-sucursales:
+    build: ./ms-sucursales
+    container_name: rentacar_ms_sucursales
+    ports:
+      - "8085:8085"
+    depends_on:
+      - mysql-db
+      - eureka-server
+    networks:
+      - rentacar-network
+
+  # MS Mantenimiento
+  ms-mantenimiento:
+    build: ./ms-mantenimiento
+    container_name: rentacar_ms_mantenimiento
+    ports:
+      - "8086:8086"
+    depends_on:
+      - mysql-db
+      - eureka-server
+    networks:
+      - rentacar-network
+      
+  # MS SEGUROS
+  ms-seguros:
+    build: ./ms-seguros
+    container_name: rentacar_ms_seguros
+    ports:
+      - "8087:8087"
+    depends_on:
+      - mysql-db
+      - eureka-server
+    networks:
+      - rentacar-network
+
+  # MS EXTRAS
+  ms-extras:
+    build: ./ms-extras
+    container_name: rentacar_ms_extras
+    ports:
+      - "8088:8088"
+    depends_on:
+      - mysql-db
+      - eureka-server
+    networks:
+      - rentacar-network
+
+  # MS EVALUACIONES
+  ms-evaluaciones:
+    build: ./ms-evaluaciones
+    container_name: rentacar_ms_evaluaciones
+    ports:
+      - "8089:8089"
+    depends_on:
+      - mysql-db
+      - eureka-server
+    networks:
+      - rentacar-network
+
+  # MS NOTIFICACIONES
+  ms-notificaciones:
+    build: ./ms-notificaciones
+    container_name: rentacar_ms_notificaciones
+    ports:
+      - "8090:8090"
+    depends_on:
+      - mysql-db
+      - eureka-server
+    networks:
+      - rentacar-network
+
+# Configuramos el docker
+networks:
+  rentacar-network:
+    driver: bridge
