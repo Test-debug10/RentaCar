@@ -6,10 +6,47 @@ spring:
     name: api-gateway
   cloud:
     gateway:
-      discovery:
-        locator:
-          enabled: true
-          lower-case-service-id: true
+      routes:
+        - id: ms-vehiculos
+          uri: lb://ms-vehiculos
+          predicates:
+            - Path=/api/v2/vehiculos/**
+        - id: ms-usuarios
+          uri: lb://ms-usuarios
+          predicates:
+            - Path=/api/v2/usuarios/**
+        - id: ms-reservas
+          uri: lb://ms-reservas
+          predicates:
+            - Path=/api/v2/reservas/**
+        - id: ms-evaluaciones
+          uri: lb://ms-evaluaciones
+          predicates:
+            - Path=/api/v2/evaluaciones/**
+        - id: ms-extras
+          uri: lb://ms-extras
+          predicates:
+            - Path=/api/v2/extras/**
+        - id: ms-mantenimiento
+          uri: lb://ms-mantenimiento
+          predicates:
+            - Path=/api/v2/mantenimiento/**
+        - id: ms-notificaciones
+          uri: lb://ms-notificaciones
+          predicates:
+            - Path=/api/v2/notificaciones/**
+        - id: ms-pagos
+          uri: lb://ms-pagos
+          predicates:
+            - Path=/api/v2/pagos/**
+        - id: ms-seguros
+          uri: lb://ms-seguros
+          predicates:
+            - Path=/api/v2/seguros/**
+        - id: ms-sucursales
+          uri: lb://ms-sucursales
+          predicates:
+            - Path=/api/v2/sucursales/**
 
 eureka:
   client:
