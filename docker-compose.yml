@@ -1,0 +1,133 @@
+version: '3.8'
+
+services:
+  mysql-db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD:
+    ports:
+      - "3306:3306"
+    networks:
+      - rentacar-network
+
+  eureka-server:
+    build: ./eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - rentacar-network
+
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - eureka-server
+    networks:
+      - rentacar-network
+
+  ms-vehiculos:
+    build: ./ms-vehiculos
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mysql-db
+      - eureka-server
+    networks:
+      - rentacar-network
+
+  ms-evaluaciones:
+    build: ./ms-evaluaciones
+    ports:
+      - "8081:8089"
+    depends_on:
+      - mysql-db
+      - eureka-server
+    networks:
+      - rentacar-network
+
+  ms-extras:
+    build: ./ms-extras
+    ports:
+      - "8081:8088"
+    depends_on:
+      - mysql-db
+      - eureka-server
+    networks:
+      - rentacar-network
+
+  ms-mantenimiento:
+    build: ./ms-mantenimiento
+    ports:
+      - "8081:8086"
+    depends_on:
+      - mysql-db
+      - eureka-server
+    networks:
+      - rentacar-network
+
+  ms-notificaciones:
+    build: ./ms-notificaciones
+    ports:
+      - "8081:8090"
+    depends_on:
+      - mysql-db
+      - eureka-server
+    networks:
+      - rentacar-network
+
+  ms-pagos:
+    build: ./ms-pagos
+    ports:
+      - "8081:8084"
+    depends_on:
+      - mysql-db
+      - eureka-server
+    networks:
+      - rentacar-network
+
+  ms-reservas:
+    build: ./ms-reservas
+    ports:
+      - "8081:8083"
+    depends_on:
+      - mysql-db
+      - eureka-server
+    networks:
+      - rentacar-network
+
+  ms-seguros:
+    build: ./ms-seguros
+    ports:
+      - "8081:8087"
+    depends_on:
+      - mysql-db
+      - eureka-server
+    networks:
+      - rentacar-network
+
+  ms-sucursales:
+    build: ./ms-sucursales
+    ports:
+      - "8081:8085"
+    depends_on:
+      - mysql-db
+      - eureka-server
+    networks:
+      - rentacar-network
+
+  ms-usuarios:
+    build: ./ms-usuarios
+    ports:
+      - "8081:8082"
+    depends_on:
+      - mysql-db
+      - eureka-server
+    networks:
+      - rentacar-network
+  # Repite este bloque para ms-usuarios (8082), ms-reservas (8083), etc.
+  # asegurándote de cambiar la ruta en "build:" y los puertos.
+
+networks:
+  rentacar-network:
+    driver: bridge
