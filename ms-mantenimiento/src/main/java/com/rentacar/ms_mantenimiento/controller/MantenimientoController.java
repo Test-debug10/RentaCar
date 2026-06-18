@@ -15,10 +15,15 @@ import com.rentacar.ms_mantenimiento.dto.MantenimientoRequestDTO;
 import com.rentacar.ms_mantenimiento.dto.MantenimientoResponseDTO;
 import com.rentacar.ms_mantenimiento.service.MantenimientoService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Tag(name = "Mantenimientos", description = "API para la gestion de mantenimientos")
 @RestController
 @RequestMapping("/api/v1/mantenimientos")
 public class MantenimientoController {
@@ -26,6 +31,12 @@ public class MantenimientoController {
     @Autowired
     private MantenimientoService mantenimientoService;
 
+    @Operation(summary = "Registrar un nuevo mantenimiento", description = "Guarda un mantenimiento en la base de datos validando sus atributos")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Mantenimiento creado exitosamente"),
+        @ApiResponse(responseCode = "400", description = "Error de validacion en los datos enviados"),
+        @ApiResponse(responseCode = "409", description = "Conflicto: El mantenimiento ya existe")
+    })
     @PostMapping
     public ResponseEntity<MantenimientoResponseDTO> crearMantenimiento(@Valid @RequestBody MantenimientoRequestDTO dto) {
         log.info("Iniciando registro de mantenimiento {} para el vehiculo ID: {}", dto.getTipo(), dto.getVehiculoId());

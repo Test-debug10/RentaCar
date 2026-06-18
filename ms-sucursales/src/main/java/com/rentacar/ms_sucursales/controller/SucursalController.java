@@ -15,10 +15,15 @@ import com.rentacar.ms_sucursales.dto.SucursalRequestDTO;
 import com.rentacar.ms_sucursales.dto.SucursalResponseDTO;
 import com.rentacar.ms_sucursales.service.SucursalService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Tag(name = "Sucursales", description = "API para la gestion de sucursales")
 @RestController
 @RequestMapping("/api/v1/sucursales")
 public class SucursalController {
@@ -26,6 +31,12 @@ public class SucursalController {
     @Autowired
     private SucursalService sucursalService;
 
+    @Operation(summary = "Registrar una nueva sucursal", description = "Guarda los datos de la sucursal en la base de datos validando sus atributos")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Sucursal creada exitosamente"),
+        @ApiResponse(responseCode = "400", description = "Error de validacion en los datos enviados"),
+        @ApiResponse(responseCode = "409", description = "Conflicto: La sucursal ya existe")
+    })
     @PostMapping
     public ResponseEntity<SucursalResponseDTO> crearSucursal(@Valid @RequestBody SucursalRequestDTO dto) {
         log.info("Registrando nueva sucursal: {} en la ciudad de {}", dto.getNombre(), dto.getCity());

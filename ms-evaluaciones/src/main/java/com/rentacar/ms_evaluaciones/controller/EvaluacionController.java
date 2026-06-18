@@ -15,10 +15,15 @@ import com.rentacar.ms_evaluaciones.dto.EvaluacionRequestDTO;
 import com.rentacar.ms_evaluaciones.dto.EvaluacionResponseDTO;
 import com.rentacar.ms_evaluaciones.service.EvaluacionService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Tag(name = "Evaluaciones", description = "API para la gestion de evaluaciones")
 @RestController
 @RequestMapping("/api/v1/evaluaciones")
 public class EvaluacionController {
@@ -26,6 +31,12 @@ public class EvaluacionController {
     @Autowired
     private EvaluacionService evaluacionService;
 
+    @Operation(summary = "Registrar una nueva evaluacion", description = "Guarda una evaluacion en la base de datos validando sus atributos")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Evaluacion creada exitosamente"),
+        @ApiResponse(responseCode = "400", description = "Error de validacion en los datos enviados"),
+        @ApiResponse(responseCode = "409", description = "Conflicto: La evaluacion ya existe")
+    })
     @PostMapping
     public ResponseEntity<EvaluacionResponseDTO> crearEvaluacion(@Valid @RequestBody EvaluacionRequestDTO dto) {
         log.info("Recibiendo nueva evaluacion para la reserva ID: {}", dto.getReservaId());
