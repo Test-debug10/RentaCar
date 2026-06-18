@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Tag(name = "Seguros", description = "API para la gestion de seguros")
 @RestController
-@RequestMapping("/api/v1/seguros")
+@RequestMapping("/api/v2/seguros")
 public class SeguroController {
 
     @Autowired

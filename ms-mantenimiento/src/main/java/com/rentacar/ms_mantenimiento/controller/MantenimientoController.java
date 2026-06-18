@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Tag(name = "Mantenimientos", description = "API para la gestion de mantenimientos")
 @RestController
-@RequestMapping("/api/v1/mantenimientos")
+@RequestMapping("/api/v2/mantenimientos")
 public class MantenimientoController {
 
     @Autowired

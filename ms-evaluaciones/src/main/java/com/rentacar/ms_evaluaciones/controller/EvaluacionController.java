@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Tag(name = "Evaluaciones", description = "API para la gestion de evaluaciones")
 @RestController
-@RequestMapping("/api/v1/evaluaciones")
+@RequestMapping("/api/v2/evaluaciones")
 public class EvaluacionController {
 
     @Autowired

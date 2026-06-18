@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Tag(name = "Reservas", description = "API para la gestion de reservas")
 @RestController
-@RequestMapping("/api/v1/reservas")
+@RequestMapping("/api/v2/reservas")
 public class ReservaController {
 
     @Autowired

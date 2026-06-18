@@ -23,7 +23,7 @@ import jakarta.validation.Valid;
 
 @Tag(name = "Vehiculos", description = "API para la gestion de vehiculos")
 @RestController
-@RequestMapping("/api/v1/vehiculos")
+@RequestMapping("/api/v2/vehiculos")
 public class VehiculoController {
 
     @Autowired

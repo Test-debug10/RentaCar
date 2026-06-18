@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Tag(name = "Notificaciones", description = "API para la gestion de vehiculos")
 @RestController
-@RequestMapping("/api/v1/notificaciones")
+@RequestMapping("/api/v2/notificaciones")
 public class NotificacionController {
 
     @Autowired

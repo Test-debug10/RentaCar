@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Tag(name = "Sucursales", description = "API para la gestion de sucursales")
 @RestController
-@RequestMapping("/api/v1/sucursales")
+@RequestMapping("/api/v2/sucursales")
 public class SucursalController {
 
     @Autowired

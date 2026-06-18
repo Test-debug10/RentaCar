@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Tag(name = "Usuarios", description = "API para la gestion de usuarios")
 @RestController
-@RequestMapping("/api/v1/usuarios")
+@RequestMapping("/api/v2/usuarios")
 public class UsuarioController {
 
     @Autowired

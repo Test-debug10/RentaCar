@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # La base de datos
   mysql-db:

@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Tag(name = "Pagos", description = "API para la gestion de pagos")
 @RestController
-@RequestMapping("/api/v1/pagos")
+@RequestMapping("/api/v2/pagos")
 public class PagoController {
 
     @Autowired
