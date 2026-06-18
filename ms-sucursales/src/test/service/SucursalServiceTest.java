@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.rentacar.ms_sucursales.dto.SucursalRequestDTO;
@@ -29,6 +30,8 @@ public class SucursalServiceTest {
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.openMocks(this);
+        
         sucursalMock = new Sucursal();
         sucursalMock.setId(1L);
         sucursalMock.setNombre("Sucursal Aeropuerto Santiago");

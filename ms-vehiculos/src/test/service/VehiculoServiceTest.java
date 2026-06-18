@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.rentacar.ms_vehiculos.dto.VehiculoRequestDTO;
@@ -29,7 +30,8 @@ public class VehiculoServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Inicializamos datos de prueba (como en el setUp de tu foto)
+        MockitoAnnotations.openMocks(this);
+
         vehiculoMock = new Vehiculo();
         vehiculoMock.setId(1L);
         vehiculoMock.setMarca("Toyota");
@@ -49,13 +51,10 @@ public class VehiculoServiceTest {
 
     @Test
     void guardarVehiculoTest() {
-        // 1. Simular (Mockear) el comportamiento de la base de datos
         when(vehiculoRepository.save(any(Vehiculo.class))).thenReturn(vehiculoMock);
 
-        // 2. Ejecutar el método real de nuestro servicio
         VehiculoResponseDTO response = vehiculoService.registrarVehiculo(requestMock);
-
-        // 3. Verificar (Asserts) que el resultado es el esperado
+        
         assertNotNull(response);
         assertEquals("Toyota", response.getMarca());
         assertEquals("RT5678", response.getPatente());

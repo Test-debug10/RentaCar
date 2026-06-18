@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.rentacar.ms_seguros.client.ReservaClient;
@@ -33,6 +34,8 @@ public class SeguroServiceTest {
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.openMocks(this);
+        
         seguroMock = new Seguro();
         seguroMock.setId(1L);
         seguroMock.setReservaId(10L);

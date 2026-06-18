@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.rentacar.ms_extras.dto.ExtraRequestDTO;
@@ -29,6 +30,8 @@ public class ExtraServiceTest {
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.openMocks(this);
+        
         extraMock = new Extra();
         extraMock.setId(1L);
         extraMock.setNombre("Silla de Bebé");

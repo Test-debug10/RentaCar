@@ -13,6 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import org.mockito.MockitoAnnotations;
+
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,6 +43,8 @@ public class ReservaServiceTest {
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.openMocks(this);
+        
         reservaMock = new Reserva();
         reservaMock.setId(1L);
         reservaMock.setUsuarioId(1L);

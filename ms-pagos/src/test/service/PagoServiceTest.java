@@ -10,6 +10,7 @@ import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.rentacar.ms_pagos.dto.PagoRequestDTO;
@@ -31,6 +32,8 @@ public class PagoServiceTest {
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.openMocks(this);
+        
         pagoMock = new Pago();
         pagoMock.setId(1L);
         pagoMock.setReservaId(15L);

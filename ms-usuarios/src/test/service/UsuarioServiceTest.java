@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.rentacar.ms_usuarios.dto.UsuarioRequestDTO;
@@ -29,6 +30,8 @@ public class UsuarioServiceTest {
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.openMocks(this);
+        
         usuarioMock = new Usuario();
         usuarioMock.setId(1L);
         usuarioMock.setRut("12345678-9");

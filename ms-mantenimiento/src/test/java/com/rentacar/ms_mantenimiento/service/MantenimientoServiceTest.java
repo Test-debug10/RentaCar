@@ -10,6 +10,7 @@ import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.rentacar.ms_mantenimiento.client.VehiculoClient;
@@ -35,6 +36,8 @@ public class MantenimientoServiceTest {
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.openMocks(this);
+        
         mantMock = new Mantenimiento();
         mantMock.setId(1L);
         mantMock.setVehiculoId(5L);
