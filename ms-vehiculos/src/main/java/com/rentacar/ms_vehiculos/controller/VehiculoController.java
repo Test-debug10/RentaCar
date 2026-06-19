@@ -35,6 +35,7 @@ public class VehiculoController {
         @ApiResponse(responseCode = "400", description = "Error de validacion en los datos enviados"),
         @ApiResponse(responseCode = "409", description = "Conflicto: La patente ya existe")
     })
+    
     @PostMapping
     public ResponseEntity<VehiculoResponseDTO> crearVehiculo(@Valid @RequestBody VehiculoRequestDTO dto) {
         VehiculoResponseDTO nuevoVehiculo = vehiculoService.registrarVehiculo(dto);

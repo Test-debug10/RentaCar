@@ -37,6 +37,7 @@ public class ExtraController {
         @ApiResponse(responseCode = "400", description = "Error de validacion en los datos enviados"),
         @ApiResponse(responseCode = "409", description = "Conflicto: El extra ya existe")
     })
+    
     @PostMapping
     public ResponseEntity<ExtraResponseDTO> crearExtra(@Valid @RequestBody ExtraRequestDTO dto) {
         log.info("Registrando nuevo accesorio extra en el catalogo: {}", dto.getNombre());

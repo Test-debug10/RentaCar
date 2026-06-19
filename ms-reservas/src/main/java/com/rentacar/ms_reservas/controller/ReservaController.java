@@ -37,6 +37,7 @@ public class ReservaController {
         @ApiResponse(responseCode = "400", description = "Error de validacion en los datos enviados"),
         @ApiResponse(responseCode = "409", description = "Conflicto: La reserva ya existe")
     })
+    
     @PostMapping
     public ResponseEntity<ReservaResponseDTO> crearReserva(@Valid @RequestBody ReservaRequestDTO dto) {
         log.info("Iniciando proceso de reserva para el usuario ID: {}", dto.getUsuarioId());

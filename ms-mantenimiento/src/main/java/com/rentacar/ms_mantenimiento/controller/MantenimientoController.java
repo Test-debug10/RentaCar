@@ -37,6 +37,7 @@ public class MantenimientoController {
         @ApiResponse(responseCode = "400", description = "Error de validacion en los datos enviados"),
         @ApiResponse(responseCode = "409", description = "Conflicto: El mantenimiento ya existe")
     })
+    
     @PostMapping
     public ResponseEntity<MantenimientoResponseDTO> crearMantenimiento(@Valid @RequestBody MantenimientoRequestDTO dto) {
         log.info("Iniciando registro de mantenimiento {} para el vehiculo ID: {}", dto.getTipo(), dto.getVehiculoId());
