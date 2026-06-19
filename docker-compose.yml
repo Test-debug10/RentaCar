@@ -4,7 +4,7 @@ services:
     image: mysql:8.0
     container_name: rentacar_mysql
     environment:
-      MYSQL_ROOT_PASSWORD:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     ports:
       - "3306:3306"
     networks:
