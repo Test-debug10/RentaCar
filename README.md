@@ -36,3 +36,9 @@ Por ejemplo:
 ## Swagger/Documentacion
 La documentación interactiva de cada microservicio se encuentra disponible levantando el proyecto y accediendo a:
 * `http://localhost:[PUERTO_DEL_MS]/swagger-ui.html`
+
+* ---
+
+## Indicaciones para hacer funcionar el proyecto
+1) Abrir el powershell de vsc dentro de la carpeta principal del proyecto
+2) Escribir * `.\start_rentacar.bat` en el powershell y esperar a que carguen los servicios.
