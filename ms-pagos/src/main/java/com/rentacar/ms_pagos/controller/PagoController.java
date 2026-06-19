@@ -37,6 +37,7 @@ public class PagoController {
         @ApiResponse(responseCode = "400", description = "Error de validacion en los datos enviados"),
         @ApiResponse(responseCode = "409", description = "Conflicto: El pago ya existe")
     })
+    
     @PostMapping
     public ResponseEntity<PagoResponseDTO> registrarPago(@Valid @RequestBody PagoRequestDTO dto) {
         log.info("Iniciando procesamiento de pago para la reserva ID: {}", dto.getReservaId());

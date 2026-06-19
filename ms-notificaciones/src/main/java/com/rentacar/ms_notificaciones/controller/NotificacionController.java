@@ -37,6 +37,7 @@ public class NotificacionController {
         @ApiResponse(responseCode = "400", description = "Error de validacion en los datos enviados"),
         @ApiResponse(responseCode = "409", description = "Conflicto: La notificacion ya existe")
     })
+    
     @PostMapping
     public ResponseEntity<NotificacionResponseDTO> crearNotificacion(@Valid @RequestBody NotificacionRequestDTO dto) {
         log.info("Procesando envio de notificacion por {} para el correo: {}", dto.getCanal(), dto.getDestinatarioEmail());

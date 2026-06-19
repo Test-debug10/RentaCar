@@ -37,6 +37,7 @@ public class SeguroController {
         @ApiResponse(responseCode = "400", description = "Error de validacion en los datos enviados"),
         @ApiResponse(responseCode = "409", description = "Conflicto: El seguro ya existe")
     })
+    
     @PostMapping
     public ResponseEntity<SeguroResponseDTO> crearSeguro(@Valid @RequestBody SeguroRequestDTO dto) {
         log.info("Procesando emision de seguro {} para la reserva ID: {}", dto.getTipoSeguro(), dto.getReservaId());

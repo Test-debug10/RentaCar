@@ -37,6 +37,7 @@ public class SucursalController {
         @ApiResponse(responseCode = "400", description = "Error de validacion en los datos enviados"),
         @ApiResponse(responseCode = "409", description = "Conflicto: La sucursal ya existe")
     })
+    
     @PostMapping
     public ResponseEntity<SucursalResponseDTO> crearSucursal(@Valid @RequestBody SucursalRequestDTO dto) {
         log.info("Registrando nueva sucursal: {} en la ciudad de {}", dto.getNombre(), dto.getCity());
