@@ -143,7 +143,7 @@ services:
     build: ./ms-notificaciones
     container_name: rentacar_ms_notificaciones
     ports:
-      - "8090:8090"
+      - "8091:8091"
     depends_on:
       - mysql-db
       - eureka-server
