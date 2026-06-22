@@ -88,3 +88,6 @@ echo [13/13] Levantando Ms Vehiculos...
 start "Ms Vehiculos" cmd /k "cd ms-vehiculos && title Ms Vehiculos && mvn spring-boot:run"
 echo Esperando 8 segundos...
 timeout /t 8 /nobreak > NUL
+
+echo.
+echo Ecosistema lanzado. Dashboard disponible en http://localhost:8761
