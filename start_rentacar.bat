@@ -6,6 +6,12 @@ echo ===================================================
 echo   Rentacar
 echo ===================================================
 
+echo [0/13] Limpiando antes de levantar el proyecto
+docker compose down
+taskkill /f /im java.exe 2>nul
+echo Esperando 6 segundos para asegurar que limpie correctamente
+timeout /t 6 /nobreak > NUL
+
 echo
 echo [1/13] Iniciando contenedor de MySQL...
 docker-compose up -d mysql-db
