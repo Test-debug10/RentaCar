@@ -1,14 +1,11 @@
 package com.rentacar.ms_mantenimiento.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rentacar.ms_mantenimiento.client.VehiculoClient;
-import com.rentacar.ms_mantenimiento.dto.MantenimientoRequestDTO;
-import com.rentacar.ms_mantenimiento.dto.MantenimientoResponseDTO;
 import com.rentacar.ms_mantenimiento.model.Mantenimiento;
 import com.rentacar.ms_mantenimiento.repository.MantenimientoRepository;
 
@@ -21,38 +18,57 @@ public class MantenimientoService {
     @Autowired
     private VehiculoClient vehiculoClient;
 
-    public MantenimientoResponseDTO registrarMantenimiento(MantenimientoRequestDTO dto) {
-        
-        // Utilizamos el feig para verificar que exista
+    public List<Mantenimiento> obtenerTodos() {
+        return mantenimientoRepository.findAll();
+    }
+
+    public Mantenimiento findById(Long id) {
+        return mantenimientoRepository.findById(id).orElse(null);
+    }
+
+    public Mantenimiento save(Mantenimiento mantenimiento) {
         try {
-            vehiculoClient.obtenerVehiculoPorId(dto.getVehiculoId());
+            vehiculoClient.obtenerVehiculoPorId(mantenimiento.getVehiculoId());
         } catch (Exception e) {
             throw new IllegalArgumentException("El vehículo ingresado no existe en el catálogo");
         }
 
-        Mantenimiento mant = new Mantenimiento();
-        mant.setVehiculoId(dto.getVehiculoId());
-        mant.setTipo(dto.getTipo());
-        mant.setDescripcion(dto.getDescripcion());
-        mant.setFechaIngreso(dto.getFechaIngreso());
-        mant.setCosto(dto.getCosto());
-
-        Mantenimiento guardado = mantenimientoRepository.save(mant);
-        return mapearAResponse(guardado);
+        return mantenimientoRepository.save(mantenimiento);
     }
 
-    public List<MantenimientoResponseDTO> obtenerTodos() {
-        return mantenimientoRepository.findAll().stream().map(this::mapearAResponse).collect(Collectors.toList());
+    public Mantenimiento patchMantenimiento(Long id, Mantenimiento parcial) {
+        Mantenimiento existente = findById(id);
+        
+        if (existente == null) {
+            return null;
+        }
+
+        if (parcial.getVehiculoId() != null) {
+            try {
+                vehiculoClient.obtenerVehiculoPorId(parcial.getVehiculoId());
+                existente.setVehiculoId(parcial.getVehiculoId());
+            } catch (Exception e) {
+                throw new IllegalArgumentException("El nuevo vehículo ingresado no existe en el catálogo");
+            }
+        }
+
+        if (parcial.getTipo() != null) {
+            existente.setTipo(parcial.getTipo());
+        }
+        if (parcial.getDescripcion() != null) {
+            existente.setDescripcion(parcial.getDescripcion());
+        }
+        if (parcial.getFechaIngreso() != null) {
+            existente.setFechaIngreso(parcial.getFechaIngreso());
+        }
+        if (parcial.getCosto() != null) {
+            existente.setCosto(parcial.getCosto());
+        }
+
+        return mantenimientoRepository.save(existente);
     }
 
-    private MantenimientoResponseDTO mapearAResponse(Mantenimiento mant) {
-        MantenimientoResponseDTO response = new MantenimientoResponseDTO();
-        response.setId(mant.getId());
-        response.setVehiculoId(mant.getVehiculoId());
-        response.setTipo(mant.getTipo());
-        response.setDescripcion(mant.getDescripcion());
-        response.setFechaIngreso(mant.getFechaIngreso());
-        response.setCosto(mant.getCosto());
-        return response;
+    public void deleteById(Long id) {
+        mantenimientoRepository.deleteById(id);
     }
 }

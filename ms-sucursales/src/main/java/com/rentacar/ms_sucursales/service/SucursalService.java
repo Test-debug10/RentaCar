@@ -1,13 +1,10 @@
 package com.rentacar.ms_sucursales.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.rentacar.ms_sucursales.dto.SucursalRequestDTO;
-import com.rentacar.ms_sucursales.dto.SucursalResponseDTO;
 import com.rentacar.ms_sucursales.model.Sucursal;
 import com.rentacar.ms_sucursales.repository.SucursalRepository;
 
@@ -17,28 +14,42 @@ public class SucursalService {
     @Autowired
     private SucursalRepository sucursalRepository;
 
-    public SucursalResponseDTO registrarSucursal(SucursalRequestDTO dto) {
-        Sucursal sucursal = new Sucursal();
-        sucursal.setNombre(dto.getNombre());
-        sucursal.setDireccion(dto.getDireccion());
-        sucursal.setCiudad(dto.getCity());
-        sucursal.setTelefono(dto.getTelefono());
-
-        Sucursal guardada = sucursalRepository.save(sucursal);
-        return mapearAResponse(guardada);
+    public List<Sucursal> obtenerTodas() {
+        return sucursalRepository.findAll();
     }
 
-    public List<SucursalResponseDTO> obtenerTodas() {
-        return sucursalRepository.findAll().stream().map(this::mapearAResponse).collect(Collectors.toList());
+    public Sucursal findById(Long id) {
+        return sucursalRepository.findById(id).orElse(null);
     }
 
-    private SucursalResponseDTO mapearAResponse(Sucursal sucursal) {
-        SucursalResponseDTO response = new SucursalResponseDTO();
-        response.setId(sucursal.getId());
-        response.setNombre(sucursal.getNombre());
-        response.setDireccion(sucursal.getDireccion());
-        response.setCiudad(sucursal.getCiudad());
-        response.setTelefono(sucursal.getTelefono());
-        return response;
+    public Sucursal save(Sucursal sucursal) {
+        return sucursalRepository.save(sucursal);
+    }
+
+    public Sucursal patchSucursal(Long id, Sucursal parcial) {
+        Sucursal existente = findById(id);
+        
+        if (existente == null) {
+            return null;
+        }
+
+        if (parcial.getNombre() != null) {
+            existente.setNombre(parcial.getNombre());
+        }
+        if (parcial.getDireccion() != null) {
+            existente.setDireccion(parcial.getDireccion());
+        }
+        if (parcial.getCiudad() != null) {
+            existente.setCiudad(parcial.getCiudad());
+        }
+        if (parcial.getTelefono() != null) {
+            existente.setTelefono(parcial.getTelefono());
+        }
+
+        return sucursalRepository.save(existente);
+    }
+
+    public void deleteById(Long id) {
+        sucursalRepository.deleteById(id);
     }
 }

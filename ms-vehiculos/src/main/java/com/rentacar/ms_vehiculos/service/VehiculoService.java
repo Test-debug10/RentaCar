@@ -1,13 +1,10 @@
 package com.rentacar.ms_vehiculos.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.rentacar.ms_vehiculos.dto.VehiculoRequestDTO;
-import com.rentacar.ms_vehiculos.dto.VehiculoResponseDTO;
 import com.rentacar.ms_vehiculos.model.Vehiculo;
 import com.rentacar.ms_vehiculos.repository.VehiculoRepository;
 
@@ -17,32 +14,51 @@ public class VehiculoService {
     @Autowired
     private VehiculoRepository vehiculoRepository;
 
-    public VehiculoResponseDTO registrarVehiculo(VehiculoRequestDTO dto) {
-        Vehiculo vehiculo = new Vehiculo();
-        vehiculo.setMarca(dto.getMarca());
-        vehiculo.setModelo(dto.getModelo());
-        vehiculo.setPatente(dto.getPatente());
-        vehiculo.setAnio(dto.getAnio());
-        vehiculo.setPrecioPorDia(dto.getPrecioPorDia());
-        vehiculo.setDisponible(true);
-
-        Vehiculo guardado = vehiculoRepository.save(vehiculo);
-        return mapearAResponse(guardado);
+    public List<Vehiculo> obtenerTodos() {
+        return vehiculoRepository.findAll();
     }
 
-    public List<VehiculoResponseDTO> obtenerTodos() {
-        return vehiculoRepository.findAll().stream().map(this::mapearAResponse).collect(Collectors.toList());
+    public Vehiculo findById(Long id) {
+        return vehiculoRepository.findById(id).orElse(null);
     }
 
-    private VehiculoResponseDTO mapearAResponse(Vehiculo vehiculo) {
-        VehiculoResponseDTO response = new VehiculoResponseDTO();
-        response.setId(vehiculo.getId());
-        response.setMarca(vehiculo.getMarca());
-        response.setModelo(vehiculo.getModelo());
-        response.setPatente(vehiculo.getPatente());
-        response.setAnio(vehiculo.getAnio());
-        response.setPrecioPorDia(vehiculo.getPrecioPorDia());
-        response.setDisponible(vehiculo.getDisponible());
-        return response;
+    public Vehiculo save(Vehiculo vehiculo) {
+        if (vehiculo.getId() == null && vehiculo.getDisponible() == null) {
+            vehiculo.setDisponible(true);
+        }
+        return vehiculoRepository.save(vehiculo);
+    }
+
+    public Vehiculo patchVehiculo(Long id, Vehiculo parcial) {
+        Vehiculo existente = findById(id);
+        
+        if (existente == null) {
+            return null;
+        }
+
+        if (parcial.getMarca() != null) {
+            existente.setMarca(parcial.getMarca());
+        }
+        if (parcial.getModelo() != null) {
+            existente.setModelo(parcial.getModelo());
+        }
+        if (parcial.getPatente() != null) {
+            existente.setPatente(parcial.getPatente());
+        }
+        if (parcial.getAnio() != null) {
+            existente.setAnio(parcial.getAnio());
+        }
+        if (parcial.getPrecioPorDia() != null) {
+            existente.setPrecioPorDia(parcial.getPrecioPorDia());
+        }
+        if (parcial.getDisponible() != null) {
+            existente.setDisponible(parcial.getDisponible());
+        }
+
+        return vehiculoRepository.save(existente);
+    }
+
+    public void deleteById(Long id) {
+        vehiculoRepository.deleteById(id);
     }
 }

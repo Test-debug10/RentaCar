@@ -1,14 +1,11 @@
 package com.rentacar.ms_seguros.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rentacar.ms_seguros.client.ReservaClient;
-import com.rentacar.ms_seguros.dto.SeguroRequestDTO;
-import com.rentacar.ms_seguros.dto.SeguroResponseDTO;
 import com.rentacar.ms_seguros.model.Seguro;
 import com.rentacar.ms_seguros.repository.SeguroRepository;
 
@@ -21,35 +18,54 @@ public class SeguroService {
     @Autowired
     private ReservaClient reservaClient;
 
-    public SeguroResponseDTO registrarSeguro(SeguroRequestDTO dto) {
-        // validamos la existencia de la reserva
+    public List<Seguro> obtenerTodos() {
+        return seguroRepository.findAll();
+    }
+
+    public Seguro findById(Long id) {
+        return seguroRepository.findById(id).orElse(null);
+    }
+
+    public Seguro save(Seguro seguro) {
         try {
-            reservaClient.obtenerReservaPorId(dto.getReservaId());
+            reservaClient.obtenerReservaPorId(seguro.getReservaId());
         } catch (Exception e) {
             throw new IllegalArgumentException("La reserva indicada no existe en el sistema.");
         }
 
-        Seguro seguro = new Seguro();
-        seguro.setReservaId(dto.getReservaId());
-        seguro.setTipoSeguro(dto.getTipoSeguro());
-        seguro.setCoberturaMaxima(dto.getCoberturaMaxima());
-        seguro.setCostoAdicional(dto.getCostoAdicional());
-
-        Seguro guardado = seguroRepository.save(seguro);
-        return mapearAResponse(guardado);
+        return seguroRepository.save(seguro);
     }
 
-    public List<SeguroResponseDTO> obtenerTodos() {
-        return seguroRepository.findAll().stream().map(this::mapearAResponse).collect(Collectors.toList());
+    public Seguro patchSeguro(Long id, Seguro parcial) {
+        Seguro existente = findById(id);
+        
+        if (existente == null) {
+            return null;
+        }
+
+        if (parcial.getReservaId() != null) {
+            try {
+                reservaClient.obtenerReservaPorId(parcial.getReservaId());
+                existente.setReservaId(parcial.getReservaId());
+            } catch (Exception e) {
+                throw new IllegalArgumentException("La nueva reserva indicada no existe en el sistema.");
+            }
+        }
+
+        if (parcial.getTipoSeguro() != null) {
+            existente.setTipoSeguro(parcial.getTipoSeguro());
+        }
+        if (parcial.getCoberturaMaxima() != null) {
+            existente.setCoberturaMaxima(parcial.getCoberturaMaxima());
+        }
+        if (parcial.getCostoAdicional() != null) {
+            existente.setCostoAdicional(parcial.getCostoAdicional());
+        }
+
+        return seguroRepository.save(existente);
     }
 
-    private SeguroResponseDTO mapearAResponse(Seguro seguro) {
-        SeguroResponseDTO response = new SeguroResponseDTO();
-        response.setId(seguro.getId());
-        response.setReservaId(seguro.getReservaId());
-        response.setTipoSeguro(seguro.getTipoSeguro());
-        response.setCoberturaMaxima(seguro.getCoberturaMaxima());
-        response.setCostoAdicional(seguro.getCostoAdicional());
-        return response;
+    public void deleteById(Long id) {
+        seguroRepository.deleteById(id);
     }
 }

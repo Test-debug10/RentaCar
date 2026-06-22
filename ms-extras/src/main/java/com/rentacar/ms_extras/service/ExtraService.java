@@ -1,13 +1,10 @@
 package com.rentacar.ms_extras.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.rentacar.ms_extras.dto.ExtraRequestDTO;
-import com.rentacar.ms_extras.dto.ExtraResponseDTO;
 import com.rentacar.ms_extras.model.Extra;
 import com.rentacar.ms_extras.repository.ExtraRepository;
 
@@ -17,28 +14,42 @@ public class ExtraService {
     @Autowired
     private ExtraRepository extraRepository;
 
-    public ExtraResponseDTO registrarExtra(ExtraRequestDTO dto) {
-        Extra extra = new Extra();
-        extra.setNombre(dto.getNombre());
-        extra.setDescripcion(dto.getDescripcion());
-        extra.setPrecioDiario(dto.getPrecioDiario());
-        extra.setStockTotal(dto.getStockTotal());
-
-        Extra guardado = extraRepository.save(extra);
-        return mapearAResponse(guardado);
+    public List<Extra> obtenerTodos() {
+        return extraRepository.findAll();
     }
 
-    public List<ExtraResponseDTO> obtenerTodos() {
-        return extraRepository.findAll().stream().map(this::mapearAResponse).collect(Collectors.toList());
+    public Extra findById(Long id) {
+        return extraRepository.findById(id).orElse(null);
     }
 
-    private ExtraResponseDTO mapearAResponse(Extra extra) {
-        ExtraResponseDTO response = new ExtraResponseDTO();
-        response.setId(extra.getId());
-        response.setNombre(extra.getNombre());
-        response.setDescripcion(extra.getDescripcion());
-        response.setPrecioDiario(extra.getPrecioDiario());
-        response.setStockTotal(extra.getStockTotal());
-        return response;
+    public Extra save(Extra extra) {
+        return extraRepository.save(extra);
+    }
+
+    public Extra patchExtra(Long id, Extra extraParcial) {
+        Extra existente = findById(id);
+        
+        if (existente == null) {
+            return null;
+        }
+
+        if (extraParcial.getNombre() != null) {
+            existente.setNombre(extraParcial.getNombre());
+        }
+        if (extraParcial.getDescripcion() != null) {
+            existente.setDescripcion(extraParcial.getDescripcion());
+        }
+        if (extraParcial.getPrecioDiario() != null) {
+            existente.setPrecioDiario(extraParcial.getPrecioDiario());
+        }
+        if (extraParcial.getStockTotal() != null) {
+            existente.setStockTotal(extraParcial.getStockTotal());
+        }
+
+        return extraRepository.save(existente);
+    }
+
+    public void deleteById(Long id) {
+        extraRepository.deleteById(id);
     }
 }
