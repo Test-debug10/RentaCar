@@ -20,7 +20,7 @@ import com.rentacar.ms_mantenimiento.model.Mantenimiento;
 import com.rentacar.ms_mantenimiento.repository.MantenimientoRepository;
 
 @SpringBootTest
-public class MantenimientoServiceTest {
+public class MantenimientoApplicationTests {
 
     @Mock
     private MantenimientoRepository mantenimientoRepository;

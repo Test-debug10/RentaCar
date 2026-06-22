@@ -10,6 +10,7 @@ import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.rentacar.ms_evaluaciones.client.ReservaClient;
@@ -19,7 +20,7 @@ import com.rentacar.ms_evaluaciones.model.Evaluacion;
 import com.rentacar.ms_evaluaciones.repository.EvaluacionRepository;
 
 @SpringBootTest
-public class EvaluacionServiceTest {
+public class EvaluacionApplicationTests {
 
     @Mock
     private EvaluacionRepository evaluacionRepository;
@@ -35,6 +36,9 @@ public class EvaluacionServiceTest {
 
     @BeforeEach
     void setUp() {
+        // Inicializa los componentes de simulación antes de ejecutar cada prueba
+		MockitoAnnotations.openMocks(this);
+
         evaluacionMock = new Evaluacion();
         evaluacionMock.setId(1L);
         evaluacionMock.setReservaId(100L);

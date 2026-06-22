@@ -17,7 +17,7 @@ import com.rentacar.ms_sucursales.model.Sucursal;
 import com.rentacar.ms_sucursales.repository.SucursalRepository;
 
 @SpringBootTest
-public class SucursalServiceTest {
+public class SucursalApplicationTests {
 
     @Mock
     private SucursalRepository sucursalRepository;

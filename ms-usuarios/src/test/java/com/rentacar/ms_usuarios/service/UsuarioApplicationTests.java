@@ -17,7 +17,7 @@ import com.rentacar.ms_usuarios.model.Usuario;
 import com.rentacar.ms_usuarios.repository.UsuarioRepository;
 
 @SpringBootTest
-public class UsuarioServiceTest {
+public class UsuarioApplicationTests {
 
     @Mock
     private UsuarioRepository usuarioRepository;

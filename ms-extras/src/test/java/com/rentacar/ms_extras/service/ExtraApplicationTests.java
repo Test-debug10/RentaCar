@@ -17,7 +17,7 @@ import com.rentacar.ms_extras.model.Extra;
 import com.rentacar.ms_extras.repository.ExtraRepository;
 
 @SpringBootTest
-public class ExtraServiceTest {
+public class ExtraApplicationTests {
 
     @Mock
     private ExtraRepository extraRepository;

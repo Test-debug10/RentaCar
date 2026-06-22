@@ -18,7 +18,7 @@ import com.rentacar.ms_seguros.model.Seguro;
 import com.rentacar.ms_seguros.repository.SeguroRepository;
 
 @SpringBootTest
-public class SeguroServiceTest {
+public class SeguroApplicationTests {
 
     @Mock
     private SeguroRepository seguroRepository;

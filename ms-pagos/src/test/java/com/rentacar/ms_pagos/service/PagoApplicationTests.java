@@ -19,7 +19,7 @@ import com.rentacar.ms_pagos.model.Pago;
 import com.rentacar.ms_pagos.repository.PagoRepository;
 
 @SpringBootTest
-public class PagoServiceTest {
+public class PagoApplicationTests {
 
     @Mock
     private PagoRepository pagoRepository;

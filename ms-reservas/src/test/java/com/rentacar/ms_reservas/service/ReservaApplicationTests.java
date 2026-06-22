@@ -1,5 +1,18 @@
 package com.rentacar.ms_reservas.service;
 
+import java.time.LocalDate;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.mockito.ArgumentMatchers.any;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import static org.mockito.Mockito.when;
+import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
+
 import com.rentacar.ms_reservas.client.UsuarioClient;
 import com.rentacar.ms_reservas.client.VehiculoClient;
 import com.rentacar.ms_reservas.client.VehiculoDTO;
@@ -7,23 +20,9 @@ import com.rentacar.ms_reservas.dto.ReservaRequestDTO;
 import com.rentacar.ms_reservas.dto.ReservaResponseDTO;
 import com.rentacar.ms_reservas.model.Reserva;
 import com.rentacar.ms_reservas.repository.ReservaRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
-
-import org.mockito.MockitoAnnotations;
-
-import java.time.LocalDate;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class ReservaServiceTest {
+public class ReservaApplicationTests {
 
     @Mock
     private ReservaRepository reservaRepository;

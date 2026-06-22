@@ -10,6 +10,7 @@ import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.rentacar.ms_notificaciones.dto.NotificacionRequestDTO;
@@ -18,7 +19,7 @@ import com.rentacar.ms_notificaciones.model.Notificacion;
 import com.rentacar.ms_notificaciones.repository.NotificacionRepository;
 
 @SpringBootTest
-public class NotificacionServiceTest {
+public class NotificacionApplicationTests {
 
     @Mock
     private NotificacionRepository notificacionRepository;
@@ -31,6 +32,9 @@ public class NotificacionServiceTest {
 
     @BeforeEach
     void setUp() {
+        // Inicializa los componentes de simulación antes de ejecutar cada prueba
+		MockitoAnnotations.openMocks(this);
+
         notificacionMock = new Notificacion();
         notificacionMock.setId(1L);
         notificacionMock.setReservaId(150L);

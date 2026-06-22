@@ -17,7 +17,7 @@ import com.rentacar.ms_vehiculos.model.Vehiculo;
 import com.rentacar.ms_vehiculos.repository.VehiculoRepository;
 
 @SpringBootTest
-public class VehiculoServiceTest {
+public class VehiculoApplicationTests {
 
     @Mock
     private VehiculoRepository vehiculoRepository;
