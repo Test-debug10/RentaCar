@@ -48,6 +48,6 @@ public class MantenimientoController {
 
     @GetMapping
     public ResponseEntity<List<MantenimientoResponseDTO>> listarMantenimientos() {
-        return ResponseEntity.ok(mantenimientoService.obtenerTodos());
+        return ResponseEntity.ok(mantenimientoService.obtenerTodosDTO());
     }
 }

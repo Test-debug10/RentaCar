@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rentacar.ms_mantenimiento.client.VehiculoClient;
+import com.rentacar.ms_mantenimiento.dto.MantenimientoRequestDTO;
+import com.rentacar.ms_mantenimiento.dto.MantenimientoResponseDTO;
 import com.rentacar.ms_mantenimiento.model.Mantenimiento;
 import com.rentacar.ms_mantenimiento.repository.MantenimientoRepository;
 
@@ -17,10 +19,6 @@ public class MantenimientoService {
 
     @Autowired
     private VehiculoClient vehiculoClient;
-
-    public List<Mantenimiento> obtenerTodos() {
-        return mantenimientoRepository.findAll();
-    }
 
     public Mantenimiento findById(Long id) {
         return mantenimientoRepository.findById(id).orElse(null);
@@ -70,5 +68,44 @@ public class MantenimientoService {
 
     public void deleteById(Long id) {
         mantenimientoRepository.deleteById(id);
+    }
+
+    public MantenimientoResponseDTO registrarMantenimiento(MantenimientoRequestDTO dto) {
+
+        Mantenimiento mantenimiento = new Mantenimiento();
+
+        mantenimiento.setVehiculoId(dto.getVehiculoId());
+        mantenimiento.setTipo(dto.getTipo());
+        mantenimiento.setDescripcion(dto.getDescripcion());
+        mantenimiento.setFechaIngreso(dto.getFechaIngreso());
+        mantenimiento.setCosto(dto.getCosto());
+
+        Mantenimiento guardado = save(mantenimiento);
+
+        MantenimientoResponseDTO response = new MantenimientoResponseDTO();
+
+        response.setId(guardado.getId());
+        response.setVehiculoId(guardado.getVehiculoId());
+        response.setTipo(guardado.getTipo());
+        response.setDescripcion(guardado.getDescripcion());
+        response.setFechaIngreso(guardado.getFechaIngreso());
+        response.setCosto(guardado.getCosto());
+
+        return response;
+    }
+
+    public List<MantenimientoResponseDTO> obtenerTodosDTO() {
+        return mantenimientoRepository.findAll().stream().map(m -> {
+            MantenimientoResponseDTO dto = new MantenimientoResponseDTO();
+
+            dto.setId(m.getId());
+            dto.setVehiculoId(m.getVehiculoId());
+            dto.setTipo(m.getTipo());
+            dto.setDescripcion(m.getDescripcion());
+            dto.setFechaIngreso(m.getFechaIngreso());
+            dto.setCosto(m.getCosto());
+
+            return dto;
+        }).toList();
     }
 }

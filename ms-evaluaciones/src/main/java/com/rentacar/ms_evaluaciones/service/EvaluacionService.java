@@ -7,8 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rentacar.ms_evaluaciones.client.ReservaClient;
+import com.rentacar.ms_evaluaciones.dto.EvaluacionRequestDTO;
+import com.rentacar.ms_evaluaciones.dto.EvaluacionResponseDTO;
 import com.rentacar.ms_evaluaciones.model.Evaluacion;
 import com.rentacar.ms_evaluaciones.repository.EvaluacionRepository;
+
 
 @Service
 public class EvaluacionService {
@@ -18,10 +21,6 @@ public class EvaluacionService {
 
     @Autowired
     private ReservaClient reservaClient;
-
-    public List<Evaluacion> obtenerTodas() {
-        return evaluacionRepository.findAll();
-    }
 
     public Evaluacion findById(Long id) {
         return evaluacionRepository.findById(id).orElse(null);
@@ -60,5 +59,38 @@ public class EvaluacionService {
 
     public void deleteById(Long id) {
         evaluacionRepository.deleteById(id);
+    }
+    
+
+    public EvaluacionResponseDTO registrarEvaluacion(EvaluacionRequestDTO dto) {
+        Evaluacion evaluacion = new Evaluacion();
+        evaluacion.setReservaId(dto.getReservaId());
+        evaluacion.setCalificacion(dto.getCalificacion());
+        evaluacion.setComentario(dto.getComentario());
+
+        Evaluacion guardada = save(evaluacion);
+
+        EvaluacionResponseDTO response = new EvaluacionResponseDTO();
+        response.setId(guardada.getId());
+        response.setReservaId(guardada.getReservaId());
+        response.setCalificacion(guardada.getCalificacion());
+        response.setComentario(guardada.getComentario());
+        response.setFechaEvaluacion(guardada.getFechaEvaluacion());
+
+        return response;
+    }
+
+    public List<EvaluacionResponseDTO> obtenerTodas() {
+        return evaluacionRepository.findAll().stream().map(e -> {
+            EvaluacionResponseDTO dto = new EvaluacionResponseDTO();
+
+            dto.setId(e.getId());
+            dto.setReservaId(e.getReservaId());
+            dto.setCalificacion(e.getCalificacion());
+            dto.setComentario(e.getComentario());
+            dto.setFechaEvaluacion(e.getFechaEvaluacion());
+
+            return dto;
+        }).toList();
     }
 }

@@ -50,4 +50,5 @@ public class EvaluacionController {
     public ResponseEntity<List<EvaluacionResponseDTO>> listarEvaluaciones() {
         return ResponseEntity.ok(evaluacionService.obtenerTodas());
     }
+    
 }
