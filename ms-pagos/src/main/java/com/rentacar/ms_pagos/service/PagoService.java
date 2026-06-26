@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.rentacar.ms_pagos.dto.PagoResponseDTO;
 import com.rentacar.ms_pagos.model.Pago;
 import com.rentacar.ms_pagos.repository.PagoRepository;
 
@@ -15,8 +16,19 @@ public class PagoService {
     @Autowired
     private PagoRepository pagoRepository;
 
-    public List<Pago> obtenerTodos() {
-        return pagoRepository.findAll();
+    public List<PagoResponseDTO> obtenerTodas() {
+        return pagoRepository.findAll().stream().map(e -> {
+            PagoResponseDTO dto = new PagoResponseDTO();
+
+            dto.setId(e.getId());
+            dto.setReservaId(e.getReservaId());
+            dto.setMonto(e.getMonto());
+            dto.setMetodoPago(e.getMetodoPago());
+            dto.setEstado(e.getEstado());
+            dto.setFechaPago(e.getFechaPago());
+            
+            return dto;
+        }).toList();
     }
 
     public Pago findById(Long id) {

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.rentacar.ms_reservas.client.UsuarioClient;
 import com.rentacar.ms_reservas.client.VehiculoClient;
 import com.rentacar.ms_reservas.client.VehiculoDTO;
+import com.rentacar.ms_reservas.dto.ReservaResponseDTO;
 import com.rentacar.ms_reservas.model.Reserva;
 import com.rentacar.ms_reservas.repository.ReservaRepository;
 
@@ -24,8 +25,19 @@ public class ReservaService {
     @Autowired
     private VehiculoClient vehiculoClient;
 
-    public List<Reserva> obtenerTodas() {
-        return reservaRepository.findAll();
+    public List<ReservaResponseDTO> obtenerTodas() {
+        return reservaRepository.findAll().stream().map(e -> {
+            ReservaResponseDTO dto = new ReservaResponseDTO();
+
+            dto.setId(e.getId());
+            dto.setUsuarioId(e.getUsuarioId());
+            dto.setVehiculoId(e.getVehiculoId());
+            dto.setFechaFin(e.getFechaInicio());
+            dto.setFechaFin(e.getFechaFin());
+            dto.setMontoTotal(e.getMontoTotal());
+
+            return dto;
+        }).toList();
     }
 
     public Reserva findById(Long id) {
