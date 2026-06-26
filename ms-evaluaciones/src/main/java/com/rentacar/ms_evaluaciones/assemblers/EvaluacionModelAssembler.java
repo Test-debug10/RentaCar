@@ -4,9 +4,14 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo; // <-- Corregido a V2
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+import java.util.List;
+
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.stereotype.Component;
 
 import com.rentacar.ms_evaluaciones.controller.EvaluacionControllerV2;
+import com.rentacar.ms_evaluaciones.dto.EvaluacionResponseDTO;
 import com.rentacar.ms_evaluaciones.model.Evaluacion;
 
 @Component
@@ -22,5 +27,10 @@ public class EvaluacionModelAssembler implements RepresentationModelAssembler<Ev
             linkTo(methodOn(EvaluacionControllerV2.class).deleteEvaluacion(evaluacion.getId())).withRel("eliminar"),
             linkTo(methodOn(EvaluacionControllerV2.class).patchEvaluacion(evaluacion.getId(), evaluacion)).withRel("actualizar-parcial")
         );
+    }
+
+    public CollectionModel<EntityModel<Evaluacion>> toCollectionModel(List<EvaluacionResponseDTO> evaluaciones) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'toCollectionModel'");
     }
 }
