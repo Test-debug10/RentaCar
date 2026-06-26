@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.rentacar.ms_notificaciones.dto.NotificacionResponseDTO;
 import com.rentacar.ms_notificaciones.model.Notificacion;
 import com.rentacar.ms_notificaciones.repository.NotificacionRepository;
 
@@ -15,9 +16,20 @@ public class NotificacionService {
     @Autowired
     private NotificacionRepository notificacionRepository;
 
-    public List<Notificacion> obtenerTodas() {
-        return notificacionRepository.findAll();
-    }
+    public List<NotificacionResponseDTO> obtenerTodas() {
+            return notificacionRepository.findAll().stream().map(e -> {
+                NotificacionResponseDTO dto = new NotificacionResponseDTO();
+
+                dto.setId(e.getId());
+                dto.setReservaId(e.getReservaId());
+                dto.setDestinatarioEmail(e.getDestinatarioEmail());
+                dto.setMensaje(e.getMensaje());
+                dto.setCanal(e.getCanal());
+                dto.setFechaEnvio(e.getFechaEnvio());
+                
+                return dto;
+            }).toList();
+        }
 
     public Notificacion findById(Long id) {
         return notificacionRepository.findById(id).orElse(null);
