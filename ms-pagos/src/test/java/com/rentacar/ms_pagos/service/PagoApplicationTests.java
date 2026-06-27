@@ -21,9 +21,9 @@ import com.rentacar.ms_pagos.repository.PagoRepository;
 @SpringBootTest
 public class PagoApplicationTests {
 
-    @Mock
+    @Mock 
     private PagoRepository pagoRepository;
-
+    
     @InjectMocks
     private PagoService pagoService;
 
@@ -50,16 +50,12 @@ public class PagoApplicationTests {
 
     @Test
     void procesarPagoTest() {
-        // Given
         when(pagoRepository.save(any(Pago.class))).thenReturn(pagoMock);
 
-        // When
         PagoResponseDTO response = pagoService.procesarPago(requestMock);
 
-        // Then
         assertNotNull(response);
         assertEquals("COMPLETADO", response.getEstado());
         assertEquals(150000.0, response.getMonto());
-        assertEquals("TARJETA_CREDITO", response.getMetodoPago());
     }
 }

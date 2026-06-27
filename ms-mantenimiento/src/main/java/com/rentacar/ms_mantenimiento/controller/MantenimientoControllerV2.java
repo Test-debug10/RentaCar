@@ -1,7 +1,5 @@
 package com.rentacar.ms_mantenimiento.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -24,84 +22,54 @@ import com.rentacar.ms_mantenimiento.assemblers.MantenimientoModelAssembler;
 import com.rentacar.ms_mantenimiento.model.Mantenimiento;
 import com.rentacar.ms_mantenimiento.service.MantenimientoService;
 
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Tag(name = "Mantenimientos", description = "API para la gestion de mantenimientos")
+@Tag(name = "Mantenimientos V2", description = "API HATEOAS")
 @RestController
 @RequestMapping("/api/v2/mantenimientos")
 public class MantenimientoControllerV2 {
 
-    @Autowired
+    @Autowired 
     private MantenimientoService mantenimientoService;
-
-    @Autowired
+    
+    @Autowired 
     private MantenimientoModelAssembler assembler;
 
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
     public ResponseEntity<CollectionModel<EntityModel<Mantenimiento>>> getAllMantenimientos() {
-        List<Mantenimiento> mantenimientos = mantenimientoService.obtenerTodos();
-        CollectionModel<EntityModel<Mantenimiento>> collectionModel = assembler.toCollectionModel(mantenimientos);
-        
-        collectionModel.add(linkTo(methodOn(MantenimientoControllerV2.class).getAllMantenimientos()).withSelfRel());
-        
-        return ResponseEntity.ok(collectionModel);
+        return ResponseEntity.ok(assembler.toCollectionModel(mantenimientoService.obtenerTodos()).add(linkTo(methodOn(MantenimientoControllerV2.class).getAllMantenimientos()).withSelfRel()));
     }
 
     @GetMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
     public ResponseEntity<EntityModel<Mantenimiento>> getMantenimientoById(@PathVariable Long id) {
-        Mantenimiento mantenimiento = mantenimientoService.findById(id);
-
-        if (mantenimiento == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(assembler.toModel(mantenimiento));
+        Mantenimiento m = mantenimientoService.findById(id);
+        return (m == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok(assembler.toModel(m));
     }
 
-    @Operation(summary = "Registrar un nuevo mantenimiento", description = "Guarda un mantenimiento en la base de datos validando sus atributos")
     @PostMapping(produces = MediaTypes.HAL_JSON_VALUE)
-    public ResponseEntity<EntityModel<Mantenimiento>> crearMantenimiento(@Valid @RequestBody Mantenimiento mantenimiento) {
-        log.info("Iniciando registro de mantenimiento {} para el vehiculo ID: {}", mantenimiento.getTipo(), mantenimiento.getVehiculoId());
-        
-        Mantenimiento nuevoMantenimiento = mantenimientoService.save(mantenimiento);
-        EntityModel<Mantenimiento> entityModel = assembler.toModel(nuevoMantenimiento);
-        
-        log.info("Mantenimiento registrado con ID: {}", nuevoMantenimiento.getId());
-        
-        return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
+    public ResponseEntity<EntityModel<Mantenimiento>> crearMantenimiento(@Valid @RequestBody Mantenimiento m) {
+        EntityModel<Mantenimiento> model = assembler.toModel(mantenimientoService.save(m));
+        return ResponseEntity.created(model.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(model);
     }
 
     @PutMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
-    public ResponseEntity<EntityModel<Mantenimiento>> updateMantenimiento(@PathVariable Long id, @RequestBody Mantenimiento mantenimiento) {
-        
-        mantenimiento.setId(id);
-        Mantenimiento updated = mantenimientoService.save(mantenimiento);
-        return ResponseEntity.ok(assembler.toModel(updated));
+    public ResponseEntity<EntityModel<Mantenimiento>> updateMantenimiento(@PathVariable Long id, @RequestBody Mantenimiento m) {
+        m.setId(id);
+        return ResponseEntity.ok(assembler.toModel(mantenimientoService.save(m)));
     }
 
     @PatchMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
-    public ResponseEntity<EntityModel<Mantenimiento>> patchMantenimiento(@PathVariable Long id, @RequestBody Mantenimiento mantenimiento) {
-        Mantenimiento updated = mantenimientoService.patchMantenimiento(id, mantenimiento);
-
-        if (updated == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(assembler.toModel(updated));
+    public ResponseEntity<EntityModel<Mantenimiento>> patchMantenimiento(@PathVariable Long id, @RequestBody Mantenimiento m) {
+        Mantenimiento updated = mantenimientoService.patchMantenimiento(id, m);
+        return (updated == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok(assembler.toModel(updated));
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
     public ResponseEntity<Void> deleteMantenimiento(@PathVariable Long id) {
-        Mantenimiento existing = mantenimientoService.findById(id);
-
-        if (existing == null) {
-            return ResponseEntity.notFound().build();
-        }
-
+        if (mantenimientoService.findById(id) == null) return ResponseEntity.notFound().build();
         mantenimientoService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

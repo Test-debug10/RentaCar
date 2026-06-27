@@ -12,7 +12,6 @@ import com.rentacar.ms_reservas.model.Reserva;
 @Component
 public class ReservaModelAssembler implements RepresentationModelAssembler<Reserva, EntityModel<Reserva>> {
 
-    @SuppressWarnings("null")
     @Override
     public EntityModel<Reserva> toModel(Reserva reserva) {
         return EntityModel.of(reserva,

@@ -11,8 +11,6 @@ import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.rentacar.ms_vehiculos.dto.VehiculoRequestDTO;
-import com.rentacar.ms_vehiculos.dto.VehiculoResponseDTO;
 import com.rentacar.ms_vehiculos.model.Vehiculo;
 import com.rentacar.ms_vehiculos.repository.VehiculoRepository;
 
@@ -26,7 +24,6 @@ public class VehiculoApplicationTests {
     private VehiculoService vehiculoService;
 
     private Vehiculo vehiculoMock;
-    private VehiculoRequestDTO requestMock;
 
     @BeforeEach
     void setUp() {
@@ -40,20 +37,13 @@ public class VehiculoApplicationTests {
         vehiculoMock.setAnio(2022);
         vehiculoMock.setPrecioPorDia(25000.0);
         vehiculoMock.setDisponible(true);
-
-        requestMock = new VehiculoRequestDTO();
-        requestMock.setMarca("Toyota");
-        requestMock.setModelo("Yaris");
-        requestMock.setPatente("RT5678");
-        requestMock.setAnio(2022);
-        requestMock.setPrecioPorDia(25000.0);
     }
 
     @Test
     void guardarVehiculoTest() {
         when(vehiculoRepository.save(any(Vehiculo.class))).thenReturn(vehiculoMock);
 
-        VehiculoResponseDTO response = vehiculoService.registrarVehiculo(requestMock);
+        Vehiculo response = vehiculoService.save(vehiculoMock);
         
         assertNotNull(response);
         assertEquals("Toyota", response.getMarca());

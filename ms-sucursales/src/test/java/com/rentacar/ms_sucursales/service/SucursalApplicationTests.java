@@ -19,9 +19,9 @@ import com.rentacar.ms_sucursales.repository.SucursalRepository;
 @SpringBootTest
 public class SucursalApplicationTests {
 
-    @Mock
+    @Mock 
     private SucursalRepository sucursalRepository;
-
+    
     @InjectMocks
     private SucursalService sucursalService;
 
@@ -48,13 +48,10 @@ public class SucursalApplicationTests {
 
     @Test
     void registrarSucursalTest() {
-        // Given
         when(sucursalRepository.save(any(Sucursal.class))).thenReturn(sucursalMock);
 
-        // When
         SucursalResponseDTO response = sucursalService.registrarSucursal(requestMock);
 
-        // Then
         assertNotNull(response);
         assertEquals("Sucursal Aeropuerto Santiago", response.getNombre());
         assertEquals("Santiago", response.getCiudad());

@@ -43,6 +43,7 @@ public class EvaluacionControllerV2 {
     public ResponseEntity<CollectionModel<EntityModel<Evaluacion>>> getAllEvaluaciones() {
         List<Evaluacion> evaluaciones = evaluacionService.obtenerTodas();
         CollectionModel<EntityModel<Evaluacion>> collectionModel = assembler.toCollectionModel(evaluaciones);
+        
         collectionModel.add(linkTo(methodOn(EvaluacionControllerV2.class).getAllEvaluaciones()).withSelfRel());
 
         return ResponseEntity.ok(collectionModel);
@@ -50,7 +51,6 @@ public class EvaluacionControllerV2 {
 
     @GetMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
     public ResponseEntity<EntityModel<Evaluacion>> getEvaluacionById(@PathVariable Long id) {
-
         Evaluacion evaluacion = evaluacionService.findById(id);
 
         if (evaluacion == null) {
@@ -62,7 +62,6 @@ public class EvaluacionControllerV2 {
 
     @PostMapping(produces = MediaTypes.HAL_JSON_VALUE)
     public ResponseEntity<EntityModel<Evaluacion>> createEvaluacion(@RequestBody Evaluacion evaluacion) {
-
         Evaluacion newEvaluacion = evaluacionService.save(evaluacion);
         EntityModel<Evaluacion> entityModel = assembler.toModel(newEvaluacion);
 
@@ -89,7 +88,6 @@ public class EvaluacionControllerV2 {
 
     @DeleteMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
     public ResponseEntity<Void> deleteEvaluacion(@PathVariable Long id) {
-
         Evaluacion existing = evaluacionService.findById(id);
 
         if (existing == null) {

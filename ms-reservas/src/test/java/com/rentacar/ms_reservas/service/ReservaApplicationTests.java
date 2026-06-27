@@ -13,7 +13,6 @@ import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.rentacar.ms_reservas.client.UsuarioClient;
 import com.rentacar.ms_reservas.client.VehiculoClient;
 import com.rentacar.ms_reservas.client.VehiculoDTO;
 import com.rentacar.ms_reservas.dto.ReservaRequestDTO;
@@ -24,15 +23,12 @@ import com.rentacar.ms_reservas.repository.ReservaRepository;
 @SpringBootTest
 public class ReservaApplicationTests {
 
-    @Mock
+    @Mock 
     private ReservaRepository reservaRepository;
-
-    @Mock
-    private UsuarioClient usuarioClient;
-
+    
     @Mock
     private VehiculoClient vehiculoClient;
-
+    
     @InjectMocks
     private ReservaService reservaService;
 
@@ -65,7 +61,6 @@ public class ReservaApplicationTests {
 
     @Test
     void crearReservaExitosamenteTest() {
-        when(usuarioClient.obtenerUsuarioPorId(1L)).thenReturn(new Object());
         when(vehiculoClient.obtenerVehiculoPorId(1L)).thenReturn(vehiculoMock);
         when(reservaRepository.save(any(Reserva.class))).thenReturn(reservaMock);
 

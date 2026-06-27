@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.rentacar.ms_extras.dto.ExtraResponseDTO;
 import com.rentacar.ms_extras.model.Extra;
 import com.rentacar.ms_extras.repository.ExtraRepository;
 
@@ -15,18 +14,8 @@ public class ExtraService {
     @Autowired
     private ExtraRepository extraRepository;
 
-    public List<ExtraResponseDTO> obtenerTodas() {
-        return extraRepository.findAll().stream().map(e -> {
-            ExtraResponseDTO dto = new ExtraResponseDTO();
-
-            dto.setId(e.getId());
-            dto.setNombre(e.getNombre());
-            dto.setDescripcion(e.getDescripcion());
-            dto.setPrecioDiario(e.getPrecioDiario());
-            dto.setStockTotal(e.getStockTotal());
-
-            return dto;
-        }).toList();
+    public List<Extra> obtenerTodos() {
+        return extraRepository.findAll();
     }
 
     public Extra findById(Long id) {

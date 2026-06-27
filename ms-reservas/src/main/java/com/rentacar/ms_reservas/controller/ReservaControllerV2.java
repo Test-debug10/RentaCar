@@ -1,7 +1,5 @@
 package com.rentacar.ms_reservas.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -24,83 +22,54 @@ import com.rentacar.ms_reservas.assemblers.ReservaModelAssembler;
 import com.rentacar.ms_reservas.model.Reserva;
 import com.rentacar.ms_reservas.service.ReservaService;
 
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Tag(name = "Reservas", description = "API para la gestion de reservas")
+@Tag(name = "Reservas V2", description = "API para gestion de reservas con hateoas")
 @RestController
 @RequestMapping("/api/v2/reservas")
 public class ReservaControllerV2 {
 
-    @Autowired
+    @Autowired 
     private ReservaService reservaService;
-
-    @Autowired
+    
+    @Autowired 
     private ReservaModelAssembler assembler;
 
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
     public ResponseEntity<CollectionModel<EntityModel<Reserva>>> getAllReservas() {
-        List<Reserva> reservas = reservaService.obtenerTodas();
-        CollectionModel<EntityModel<Reserva>> collectionModel = assembler.toCollectionModel(reservas);
-        
-        collectionModel.add(linkTo(methodOn(ReservaControllerV2.class).getAllReservas()).withSelfRel());
-        
-        return ResponseEntity.ok(collectionModel);
+        return ResponseEntity.ok(assembler.toCollectionModel(reservaService.obtenerTodas()).add(linkTo(methodOn(ReservaControllerV2.class).getAllReservas()).withSelfRel()));
     }
 
     @GetMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
     public ResponseEntity<EntityModel<Reserva>> getReservaById(@PathVariable Long id) {
-        Reserva reserva = reservaService.findById(id);
-
-        if (reserva == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(assembler.toModel(reserva));
+        Reserva r = reservaService.findById(id);
+        return (r == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok(assembler.toModel(r));
     }
 
-    @Operation(summary = "Registrar una nueva reserva", description = "Guarda los datos de una reserva en la base de datos validando sus atributos")
     @PostMapping(produces = MediaTypes.HAL_JSON_VALUE)
     public ResponseEntity<EntityModel<Reserva>> crearReserva(@Valid @RequestBody Reserva reserva) {
-        log.info("Iniciando proceso de reserva para el usuario ID: {}", reserva.getUsuarioId());
-        
-        Reserva nuevaReserva = reservaService.save(reserva);
-        EntityModel<Reserva> entityModel = assembler.toModel(nuevaReserva);
-        
-        log.info("Reserva exitosa con ID: {}. Monto total: {}", nuevaReserva.getId(), nuevaReserva.getMontoTotal());
-        
-        return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
+        EntityModel<Reserva> model = assembler.toModel(reservaService.save(reserva));
+        return ResponseEntity.created(model.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(model);
     }
 
     @PutMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
     public ResponseEntity<EntityModel<Reserva>> updateReserva(@PathVariable Long id, @RequestBody Reserva reserva) {
         reserva.setId(id);
-        Reserva updated = reservaService.save(reserva);
-        return ResponseEntity.ok(assembler.toModel(updated));
+        return ResponseEntity.ok(assembler.toModel(reservaService.save(reserva)));
     }
 
     @PatchMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
     public ResponseEntity<EntityModel<Reserva>> patchReserva(@PathVariable Long id, @RequestBody Reserva reserva) {
         Reserva updated = reservaService.patchReserva(id, reserva);
-
-        if (updated == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(assembler.toModel(updated));
+        return (updated == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok(assembler.toModel(updated));
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
     public ResponseEntity<Void> deleteReserva(@PathVariable Long id) {
-        Reserva existing = reservaService.findById(id);
-
-        if (existing == null) {
-            return ResponseEntity.notFound().build();
-        }
-
+        if (reservaService.findById(id) == null) return ResponseEntity.notFound().build();
         reservaService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

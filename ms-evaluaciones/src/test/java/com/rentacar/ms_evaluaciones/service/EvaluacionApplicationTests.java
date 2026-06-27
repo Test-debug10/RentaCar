@@ -14,8 +14,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.rentacar.ms_evaluaciones.client.ReservaClient;
-import com.rentacar.ms_evaluaciones.dto.EvaluacionRequestDTO;
-import com.rentacar.ms_evaluaciones.dto.EvaluacionResponseDTO;
 import com.rentacar.ms_evaluaciones.model.Evaluacion;
 import com.rentacar.ms_evaluaciones.repository.EvaluacionRepository;
 
@@ -32,12 +30,10 @@ public class EvaluacionApplicationTests {
     private EvaluacionService evaluacionService;
 
     private Evaluacion evaluacionMock;
-    private EvaluacionRequestDTO requestMock;
 
     @BeforeEach
     void setUp() {
-        // Inicializa los componentes de simulación antes de ejecutar cada prueba
-		MockitoAnnotations.openMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         evaluacionMock = new Evaluacion();
         evaluacionMock.setId(1L);
@@ -45,23 +41,15 @@ public class EvaluacionApplicationTests {
         evaluacionMock.setCalificacion(5);
         evaluacionMock.setComentario("Excelente vehículo y servicio impecable.");
         evaluacionMock.setFechaEvaluacion(LocalDate.now());
-
-        requestMock = new EvaluacionRequestDTO();
-        requestMock.setReservaId(100L);
-        requestMock.setCalificacion(5);
-        requestMock.setComentario("Excelente vehículo y servicio impecable.");
     }
 
     @Test
     void registrarEvaluacionExitosaTest() {
-        // Given
         when(reservaClient.obtenerReservaPorId(100L)).thenReturn(new Object());
         when(evaluacionRepository.save(any(Evaluacion.class))).thenReturn(evaluacionMock);
 
-        // When
-        EvaluacionResponseDTO response = evaluacionService.registrarEvaluacion(requestMock);
+        Evaluacion response = evaluacionService.save(evaluacionMock);
 
-        // Then
         assertNotNull(response);
         assertEquals(5, response.getCalificacion());
         assertEquals(100L, response.getReservaId());

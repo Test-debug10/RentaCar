@@ -1,7 +1,5 @@
 package com.rentacar.ms_usuarios.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -24,84 +22,54 @@ import com.rentacar.ms_usuarios.assemblers.UsuarioModelAssembler;
 import com.rentacar.ms_usuarios.model.Usuario;
 import com.rentacar.ms_usuarios.service.UsuarioService;
 
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Tag(name = "Usuarios", description = "API para la gestion de usuarios")
+@Tag(name = "Usuarios V2", description = "API para gestion de usuarios hateoas")
 @RestController
 @RequestMapping("/api/v2/usuarios")
 public class UsuarioControllerV2 {
 
     @Autowired
     private UsuarioService usuarioService;
-
+    
     @Autowired
     private UsuarioModelAssembler assembler;
 
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
     public ResponseEntity<CollectionModel<EntityModel<Usuario>>> getAllUsuarios() {
-        log.info("Obteniendo la lista de todos los usuarios registrados");
-        List<Usuario> usuarios = usuarioService.obtenerTodos();
-        CollectionModel<EntityModel<Usuario>> collectionModel = assembler.toCollectionModel(usuarios);
-        
-        collectionModel.add(linkTo(methodOn(UsuarioControllerV2.class).getAllUsuarios()).withSelfRel());
-        
-        return ResponseEntity.ok(collectionModel);
+        return ResponseEntity.ok(assembler.toCollectionModel(usuarioService.obtenerTodos()).add(linkTo(methodOn(UsuarioControllerV2.class).getAllUsuarios()).withSelfRel()));
     }
 
     @GetMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
     public ResponseEntity<EntityModel<Usuario>> getUsuarioById(@PathVariable Long id) {
-        Usuario usuario = usuarioService.findById(id);
-
-        if (usuario == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(assembler.toModel(usuario));
+        Usuario u = usuarioService.findById(id);
+        return (u == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok(assembler.toModel(u));
     }
 
-    @Operation(summary = "Registrar un nuevo usuario", description = "Guarda un usuario en la base de datos validando sus atributos")
     @PostMapping(produces = MediaTypes.HAL_JSON_VALUE)
     public ResponseEntity<EntityModel<Usuario>> crearUsuario(@Valid @RequestBody Usuario usuario) {
-        log.info("Iniciando registro de nuevo usuario con RUT: {}", usuario.getRut());
-        
-        Usuario nuevoUsuario = usuarioService.save(usuario);
-        EntityModel<Usuario> entityModel = assembler.toModel(nuevoUsuario);
-        
-        log.info("Usuario registrado exitosamente con ID: {}", nuevoUsuario.getId());
-        
-        return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
+        EntityModel<Usuario> model = assembler.toModel(usuarioService.save(usuario));
+        return ResponseEntity.created(model.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(model);
     }
 
     @PutMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
     public ResponseEntity<EntityModel<Usuario>> updateUsuario(@PathVariable Long id, @RequestBody Usuario usuario) {
         usuario.setId(id);
-        Usuario updated = usuarioService.save(usuario);
-        return ResponseEntity.ok(assembler.toModel(updated));
+        return ResponseEntity.ok(assembler.toModel(usuarioService.save(usuario)));
     }
 
     @PatchMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
     public ResponseEntity<EntityModel<Usuario>> patchUsuario(@PathVariable Long id, @RequestBody Usuario usuario) {
         Usuario updated = usuarioService.patchUsuario(id, usuario);
-
-        if (updated == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(assembler.toModel(updated));
+        return (updated == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok(assembler.toModel(updated));
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
     public ResponseEntity<Void> deleteUsuario(@PathVariable Long id) {
-        Usuario existing = usuarioService.findById(id);
-
-        if (existing == null) {
-            return ResponseEntity.notFound().build();
-        }
-
+        if (usuarioService.findById(id) == null) return ResponseEntity.notFound().build();
         usuarioService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

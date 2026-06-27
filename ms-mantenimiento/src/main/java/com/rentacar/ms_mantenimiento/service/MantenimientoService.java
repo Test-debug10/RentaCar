@@ -1,6 +1,7 @@
 package com.rentacar.ms_mantenimiento.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,32 +25,31 @@ public class MantenimientoService {
         return mantenimientoRepository.findById(id).orElse(null);
     }
 
+    public List<Mantenimiento> obtenerTodos() {
+        return mantenimientoRepository.findAll();
+    }
+
     public Mantenimiento save(Mantenimiento mantenimiento) {
         try {
             vehiculoClient.obtenerVehiculoPorId(mantenimiento.getVehiculoId());
         } catch (Exception e) {
             throw new IllegalArgumentException("El vehículo ingresado no existe en el catálogo");
         }
-
         return mantenimientoRepository.save(mantenimiento);
     }
 
     public Mantenimiento patchMantenimiento(Long id, Mantenimiento parcial) {
         Mantenimiento existente = findById(id);
-        
-        if (existente == null) {
-            return null;
-        }
+        if (existente == null) return null;
 
         if (parcial.getVehiculoId() != null) {
             try {
                 vehiculoClient.obtenerVehiculoPorId(parcial.getVehiculoId());
                 existente.setVehiculoId(parcial.getVehiculoId());
             } catch (Exception e) {
-                throw new IllegalArgumentException("El nuevo vehículo ingresado no existe en el catálogo");
+                throw new IllegalArgumentException("El vehículo ingresado no existe");
             }
         }
-
         if (parcial.getTipo() != null) {
             existente.setTipo(parcial.getTipo());
         }
@@ -71,41 +71,30 @@ public class MantenimientoService {
     }
 
     public MantenimientoResponseDTO registrarMantenimiento(MantenimientoRequestDTO dto) {
+        Mantenimiento m = new Mantenimiento();
+        m.setVehiculoId(dto.getVehiculoId());
+        m.setTipo(dto.getTipo());
+        m.setDescripcion(dto.getDescripcion());
+        m.setFechaIngreso(dto.getFechaIngreso());
+        m.setCosto(dto.getCosto());
 
-        Mantenimiento mantenimiento = new Mantenimiento();
+        Mantenimiento guardado = save(m);
 
-        mantenimiento.setVehiculoId(dto.getVehiculoId());
-        mantenimiento.setTipo(dto.getTipo());
-        mantenimiento.setDescripcion(dto.getDescripcion());
-        mantenimiento.setFechaIngreso(dto.getFechaIngreso());
-        mantenimiento.setCosto(dto.getCosto());
-
-        Mantenimiento guardado = save(mantenimiento);
-
-        MantenimientoResponseDTO response = new MantenimientoResponseDTO();
-
-        response.setId(guardado.getId());
-        response.setVehiculoId(guardado.getVehiculoId());
-        response.setTipo(guardado.getTipo());
-        response.setDescripcion(guardado.getDescripcion());
-        response.setFechaIngreso(guardado.getFechaIngreso());
-        response.setCosto(guardado.getCosto());
-
-        return response;
+        return mapToDTO(guardado);
     }
 
     public List<MantenimientoResponseDTO> obtenerTodosDTO() {
-        return mantenimientoRepository.findAll().stream().map(m -> {
-            MantenimientoResponseDTO dto = new MantenimientoResponseDTO();
+        return mantenimientoRepository.findAll().stream().map(this::mapToDTO).collect(Collectors.toList());
+    }
 
-            dto.setId(m.getId());
-            dto.setVehiculoId(m.getVehiculoId());
-            dto.setTipo(m.getTipo());
-            dto.setDescripcion(m.getDescripcion());
-            dto.setFechaIngreso(m.getFechaIngreso());
-            dto.setCosto(m.getCosto());
-
-            return dto;
-        }).toList();
+    private MantenimientoResponseDTO mapToDTO(Mantenimiento m) {
+        MantenimientoResponseDTO dto = new MantenimientoResponseDTO();
+        dto.setId(m.getId());
+        dto.setVehiculoId(m.getVehiculoId());
+        dto.setTipo(m.getTipo());
+        dto.setDescripcion(m.getDescripcion());
+        dto.setFechaIngreso(m.getFechaIngreso());
+        dto.setCosto(m.getCosto());
+        return dto;
     }
 }

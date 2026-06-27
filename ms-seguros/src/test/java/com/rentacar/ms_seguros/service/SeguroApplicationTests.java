@@ -20,13 +20,13 @@ import com.rentacar.ms_seguros.repository.SeguroRepository;
 @SpringBootTest
 public class SeguroApplicationTests {
 
-    @Mock
+    @Mock 
     private SeguroRepository seguroRepository;
-
-    @Mock
+    
+    @Mock 
     private ReservaClient reservaClient;
-
-    @InjectMocks
+    
+    @InjectMocks 
     private SeguroService seguroService;
 
     private Seguro seguroMock;
@@ -52,14 +52,11 @@ public class SeguroApplicationTests {
 
     @Test
     void registrarSeguroExitosoTest() {
-        // Given
         when(reservaClient.obtenerReservaPorId(10L)).thenReturn(new Object());
         when(seguroRepository.save(any(Seguro.class))).thenReturn(seguroMock);
 
-        // When
         SeguroResponseDTO response = seguroService.registrarSeguro(requestMock);
 
-        // Then
         assertNotNull(response);
         assertEquals("COBERTURA_TOTAL", response.getTipoSeguro());
         assertEquals(25000.0, response.getCostoAdicional());

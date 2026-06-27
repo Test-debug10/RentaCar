@@ -12,7 +12,6 @@ import com.rentacar.ms_pagos.model.Pago;
 @Component
 public class PagoModelAssembler implements RepresentationModelAssembler<Pago, EntityModel<Pago>> {
 
-    @SuppressWarnings("null")
     @Override
     public EntityModel<Pago> toModel(Pago pago) {
         return EntityModel.of(pago,

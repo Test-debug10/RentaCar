@@ -19,11 +19,8 @@ import com.rentacar.ms_usuarios.repository.UsuarioRepository;
 @SpringBootTest
 public class UsuarioApplicationTests {
 
-    @Mock
-    private UsuarioRepository usuarioRepository;
-
-    @InjectMocks
-    private UsuarioService usuarioService;
+    @Mock private UsuarioRepository usuarioRepository;
+    @InjectMocks private UsuarioService usuarioService;
 
     private Usuario usuarioMock;
     private UsuarioRequestDTO requestMock;
@@ -48,13 +45,10 @@ public class UsuarioApplicationTests {
 
     @Test
     void registrarUsuarioTest() {
-        // Given (Simulamos el repositorio)
         when(usuarioRepository.save(any(Usuario.class))).thenReturn(usuarioMock);
 
-        // When (Ejecutamos el servicio)
         UsuarioResponseDTO response = usuarioService.registrarUsuario(requestMock);
         
-        // Then (Verificamos resultados)
         assertNotNull(response);
         assertEquals("Juan Perez", response.getNombreCompleto());
         assertEquals("juan@rentacar.cl", response.getEmail());

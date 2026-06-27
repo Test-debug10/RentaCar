@@ -21,7 +21,6 @@ public class WebClientConfig {
 
     @Bean
     public OpenAPI customOpenAPI() {
-        return new OpenAPI()
-                .servers(List.of(new Server().url("/").description("Ruta Relativa Centralizada")));
+        return new OpenAPI().servers(List.of(new Server().url("/").description("Ruta Relativa Centralizada")));
     }
 }

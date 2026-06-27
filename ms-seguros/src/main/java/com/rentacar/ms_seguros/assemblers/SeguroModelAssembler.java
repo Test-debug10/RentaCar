@@ -12,7 +12,6 @@ import com.rentacar.ms_seguros.model.Seguro;
 @Component
 public class SeguroModelAssembler implements RepresentationModelAssembler<Seguro, EntityModel<Seguro>> {
 
-    @SuppressWarnings("null")
     @Override
     public EntityModel<Seguro> toModel(Seguro seguro) {
         return EntityModel.of(seguro,

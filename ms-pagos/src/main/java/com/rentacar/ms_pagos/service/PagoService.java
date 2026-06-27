@@ -2,10 +2,12 @@ package com.rentacar.ms_pagos.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.rentacar.ms_pagos.dto.PagoRequestDTO;
 import com.rentacar.ms_pagos.dto.PagoResponseDTO;
 import com.rentacar.ms_pagos.model.Pago;
 import com.rentacar.ms_pagos.repository.PagoRepository;
@@ -16,23 +18,12 @@ public class PagoService {
     @Autowired
     private PagoRepository pagoRepository;
 
-    public List<PagoResponseDTO> obtenerTodas() {
-        return pagoRepository.findAll().stream().map(e -> {
-            PagoResponseDTO dto = new PagoResponseDTO();
-
-            dto.setId(e.getId());
-            dto.setReservaId(e.getReservaId());
-            dto.setMonto(e.getMonto());
-            dto.setMetodoPago(e.getMetodoPago());
-            dto.setEstado(e.getEstado());
-            dto.setFechaPago(e.getFechaPago());
-            
-            return dto;
-        }).toList();
-    }
-
     public Pago findById(Long id) {
         return pagoRepository.findById(id).orElse(null);
+    }
+
+    public List<Pago> obtenerTodos() {
+        return pagoRepository.findAll();
     }
 
     public Pago save(Pago pago) {
@@ -47,7 +38,6 @@ public class PagoService {
 
     public Pago patchPago(Long id, Pago parcial) {
         Pago existente = findById(id);
-        
         if (existente == null) {
             return null;
         }
@@ -70,5 +60,30 @@ public class PagoService {
 
     public void deleteById(Long id) {
         pagoRepository.deleteById(id);
+    }
+
+    public PagoResponseDTO procesarPago(PagoRequestDTO dto) {
+        Pago p = new Pago();
+        p.setReservaId(dto.getReservaId());
+        p.setMonto(dto.getMonto());
+        p.setMetodoPago(dto.getMetodoPago());
+        
+        Pago guardado = save(p);
+        return mapToDTO(guardado);
+    }
+
+    public List<PagoResponseDTO> obtenerTodosDTO() {
+        return obtenerTodos().stream().map(this::mapToDTO).collect(Collectors.toList());
+    }
+
+    private PagoResponseDTO mapToDTO(Pago p) {
+        PagoResponseDTO dto = new PagoResponseDTO();
+        dto.setId(p.getId());
+        dto.setReservaId(p.getReservaId());
+        dto.setMonto(p.getMonto());
+        dto.setMetodoPago(p.getMetodoPago());
+        dto.setEstado(p.getEstado());
+        dto.setFechaPago(p.getFechaPago());
+        return dto;
     }
 }

@@ -12,7 +12,6 @@ import com.rentacar.ms_mantenimiento.model.Mantenimiento;
 @Component
 public class MantenimientoModelAssembler implements RepresentationModelAssembler<Mantenimiento, EntityModel<Mantenimiento>> {
 
-    @SuppressWarnings("null")
     @Override
     public EntityModel<Mantenimiento> toModel(Mantenimiento mantenimiento) {
         return EntityModel.of(mantenimiento,

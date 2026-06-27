@@ -1,6 +1,7 @@
 package com.rentacar.ms_extras.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,41 +14,56 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.rentacar.ms_extras.dto.ExtraRequestDTO;
 import com.rentacar.ms_extras.dto.ExtraResponseDTO;
+import com.rentacar.ms_extras.model.Extra;
 import com.rentacar.ms_extras.service.ExtraService;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Tag(name = "Extras", description = "API para la gestion de extras")
+@Tag(name = "Extras", description = "API para la gestion de extras)")
 @RestController
-@RequestMapping("/api/v2/extras")
+@RequestMapping("/api/v1/extras")
 public class ExtraController {
     
     @Autowired
     private ExtraService extraService;
 
-    @Operation(summary = "Registrar un nuevo extra", description = "Guarda un extra en la base de datos validando sus atributos")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Extra creado exitosamente"),
-        @ApiResponse(responseCode = "400", description = "Error de validacion en los datos enviados"),
-        @ApiResponse(responseCode = "409", description = "Conflicto: El extra ya existe")
-    })
-    
     @PostMapping
     public ResponseEntity<ExtraResponseDTO> crearExtra(@Valid @RequestBody ExtraRequestDTO dto) {
-        log.info("Registrando nuevo accesorio extra en el catalogo: {}", dto.getNombre());
-        ExtraResponseDTO nuevoExtra = extraService.registrarExtra(dto);
-        log.info("Accesorio registrado con exito, ID: {}", nuevoExtra.getId());
-        return new ResponseEntity<>(nuevoExtra, HttpStatus.CREATED);
+        log.info("Registrando nuevo accesorio extra: {}", dto.getNombre());
+        
+        Extra extra = new Extra();
+        extra.setNombre(dto.getNombre());
+        extra.setDescripcion(dto.getDescripcion());
+        extra.setPrecioDiario(dto.getPrecioDiario());
+        extra.setStockTotal(dto.getStockTotal());
+
+        Extra guardado = extraService.save(extra);
+
+        ExtraResponseDTO resp = new ExtraResponseDTO();
+        resp.setId(guardado.getId());
+        resp.setNombre(guardado.getNombre());
+        resp.setDescripcion(guardado.getDescripcion());
+        resp.setPrecioDiario(guardado.getPrecioDiario());
+        resp.setStockTotal(guardado.getStockTotal());
+
+        return new ResponseEntity<>(resp, HttpStatus.CREATED);
     }
 
     @GetMapping
     public ResponseEntity<List<ExtraResponseDTO>> listarExtras() {
-        return ResponseEntity.ok(extraService.obtenerTodos());
+        List<ExtraResponseDTO> lista = extraService.obtenerTodos().stream().map(e -> {
+            ExtraResponseDTO dto = new ExtraResponseDTO();
+            dto.setId(e.getId());
+            dto.setNombre(e.getNombre());
+            dto.setDescripcion(e.getDescripcion());
+            dto.setPrecioDiario(e.getPrecioDiario());
+            dto.setStockTotal(e.getStockTotal());
+            return dto;
+        }).collect(Collectors.toList());
+        
+        return ResponseEntity.ok(lista);
     }
 }

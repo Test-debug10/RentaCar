@@ -12,7 +12,6 @@ import com.rentacar.ms_sucursales.model.Sucursal;
 @Component
 public class SucursalModelAssembler implements RepresentationModelAssembler<Sucursal, EntityModel<Sucursal>> {
 
-    @SuppressWarnings("null")
     @Override
     public EntityModel<Sucursal> toModel(Sucursal sucursal) {
         return EntityModel.of(sucursal,

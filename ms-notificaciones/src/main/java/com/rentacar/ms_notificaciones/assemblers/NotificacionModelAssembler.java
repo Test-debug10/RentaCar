@@ -12,7 +12,6 @@ import com.rentacar.ms_notificaciones.model.Notificacion;
 @Component
 public class NotificacionModelAssembler implements RepresentationModelAssembler<Notificacion, EntityModel<Notificacion>> {
 
-    @SuppressWarnings("null")
     @Override
     public EntityModel<Notificacion> toModel(Notificacion notificacion) {
 

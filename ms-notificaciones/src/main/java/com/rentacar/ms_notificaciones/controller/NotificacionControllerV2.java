@@ -1,7 +1,5 @@
 package com.rentacar.ms_notificaciones.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -24,85 +22,57 @@ import com.rentacar.ms_notificaciones.assemblers.NotificacionModelAssembler;
 import com.rentacar.ms_notificaciones.model.Notificacion;
 import com.rentacar.ms_notificaciones.service.NotificacionService;
 
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Tag(name = "Notificaciones", description = "API para la gestión de notificaciones")
+@Tag(name = "Notificaciones V2", description = "Hateoas")
 @RestController
 @RequestMapping("/api/v2/notificaciones")
 public class NotificacionControllerV2 {
 
-    @Autowired
+    @Autowired 
     private NotificacionService notificacionService;
-
-    @Autowired
+    
+    @Autowired 
     private NotificacionModelAssembler assembler;
 
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
     public ResponseEntity<CollectionModel<EntityModel<Notificacion>>> getAllNotificaciones() {
-        List<Notificacion> notificaciones = notificacionService.obtenerTodas();
-        CollectionModel<EntityModel<Notificacion>> collectionModel = assembler.toCollectionModel(notificaciones);
-        
-        collectionModel.add(linkTo(methodOn(NotificacionControllerV2.class).getAllNotificaciones()).withSelfRel());
-        
-        return ResponseEntity.ok(collectionModel);
+        return ResponseEntity.ok(assembler.toCollectionModel(notificacionService.obtenerTodas()).add(linkTo(methodOn(NotificacionControllerV2.class).getAllNotificaciones()).withSelfRel()));
     }
 
     @GetMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
     public ResponseEntity<EntityModel<Notificacion>> getNotificacionById(@PathVariable Long id) {
-        Notificacion notificacion = notificacionService.findById(id);
-
-        if (notificacion == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(assembler.toModel(notificacion));
+        Notificacion n = notificacionService.findById(id);
+        return (n == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok(assembler.toModel(n));
     }
 
-    @Operation(summary = "Registrar una nueva notificacion", description = "Guarda la notificacion en la base de datos validando sus atributos")
     @PostMapping(produces = MediaTypes.HAL_JSON_VALUE)
-    public ResponseEntity<EntityModel<Notificacion>> createNotificacion(@Valid @RequestBody Notificacion notificacion) {
-        log.info("Procesando envio de notificacion por {} para el correo: {}", notificacion.getCanal(), notificacion.getDestinatarioEmail());
-        
-        Notificacion nueva = notificacionService.save(notificacion);
-        EntityModel<Notificacion> entityModel = assembler.toModel(nueva);
-        
-        log.info("Notificacion registrada en el historial con ID: {}", nueva.getId());
-        
-        return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
+    public ResponseEntity<EntityModel<Notificacion>> createNotificacion(@Valid @RequestBody Notificacion n) {
+        EntityModel<Notificacion> model = assembler.toModel(notificacionService.save(n));
+        return ResponseEntity.created(model.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(model);
     }
 
     @PutMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
-    public ResponseEntity<EntityModel<Notificacion>> updateNotificacion(@PathVariable Long id, @RequestBody Notificacion notificacion) {
-        
-        notificacion.setId(id);
-        Notificacion updated = notificacionService.save(notificacion);
-        return ResponseEntity.ok(assembler.toModel(updated));
+    public ResponseEntity<EntityModel<Notificacion>> updateNotificacion(@PathVariable Long id, @RequestBody Notificacion n) {
+        n.setId(id);
+        EntityModel<Notificacion> model = assembler.toModel(notificacionService.save(n));
+        return ResponseEntity.ok(model);
     }
 
     @PatchMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
-    public ResponseEntity<EntityModel<Notificacion>> patchNotificacion(@PathVariable Long id, @RequestBody Notificacion notificacion) {
-        
-        Notificacion updated = notificacionService.patchNotificacion(id, notificacion);
-
-        if (updated == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(assembler.toModel(updated));
+    public ResponseEntity<EntityModel<Notificacion>> patchNotificacion(@PathVariable Long id, @RequestBody Notificacion n) {
+        Notificacion updated = notificacionService.patchNotificacion(id, n);
+        return (updated == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok(assembler.toModel(updated));
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
     public ResponseEntity<Void> deleteNotificacion(@PathVariable Long id) {
-        Notificacion existing = notificacionService.findById(id);
-
-        if (existing == null) {
+        if (notificacionService.findById(id) == null) 
             return ResponseEntity.notFound().build();
-        }
-
+        
         notificacionService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
