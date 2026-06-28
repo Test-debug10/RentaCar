@@ -12,7 +12,6 @@ import com.rentacar.ms_vehiculos.model.Vehiculo;
 @Component
 public class VehiculoModelAssembler implements RepresentationModelAssembler<Vehiculo, EntityModel<Vehiculo>> {
 
-    @SuppressWarnings("null")
     @Override
     public EntityModel<Vehiculo> toModel(Vehiculo vehiculo) {
         return EntityModel.of(vehiculo,
